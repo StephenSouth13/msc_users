@@ -105,13 +105,13 @@ export default function RegisterPage() {
       
       if (response.success) {
         toast.success('Đăng ký thành công!', {
-          description: 'Chào mừng bạn đến với MSC Center. Bạn sẽ được chuyển đến trang đăng nhập.'
+          description: 'Chào mừng bạn đến với MSC Center. Đang chuyển đến trang đăng nhập...'
         })
         
-        // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
+        // Chuyển hướng đến trang đăng nhập ngay lập tức sau khi đăng ký thành công
         setTimeout(() => {
           router.push('/login?message=registration-success')
-        }, 1500)
+        }, 1000) // Giảm thời gian chờ từ 1500ms xuống 1000ms
       } else {
         // Hiển thị thông báo lỗi chi tiết từ server
         const errorMessage = (response as any).error || 'Có lỗi xảy ra khi đăng ký'

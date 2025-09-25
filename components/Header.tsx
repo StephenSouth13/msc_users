@@ -199,18 +199,12 @@ const Header = () => {
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/trang-chu" className="cursor-pointer">
-                      <User className="mr-2 h-4 w-4" />
-                      Trang chủ
-                    </Link>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile" className="cursor-pointer">
+                    <Link href="/student" className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
                       Hồ sơ của tôi
                     </Link>
                   </DropdownMenuItem>
+
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={handleLogout}

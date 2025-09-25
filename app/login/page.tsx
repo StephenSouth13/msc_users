@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
 import { 
   Eye, EyeOff, Mail, Lock, ArrowRight, CheckCircle, 
@@ -15,15 +15,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/contexts/auth-context"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { toast } from "sonner"
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+
+  // Check for registration success message
+  useEffect(() => {
+    const message = searchParams.get('message')
+    if (message === 'registration-success') {
+      toast.success('Đăng ký thành công!', {
+        description: 'Vui lòng đăng nhập để tiếp tục sử dụng dịch vụ.',
+        duration: 4000
+      })
+    }
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,7 +46,7 @@ export default function LoginPage() {
     try {
       const result = await login(email, password)
       if (result.success) {
-        router.push("/trang-chu")
+        router.push("/student")
       } else {
         setError(result.message)
       }

@@ -343,9 +343,19 @@ export default function BlogPage() {
             Nhận những bài viết mới nhất và thông tin độc quyền từ các chuyên gia MSC Center thẳng vào hộp thư của bạn.
           </p>
           <div className="max-w-md mx-auto">
-            <form className="flex">
-              <input type="email" placeholder="Nhập email của bạn" className="flex-1 px-4 py-3 rounded-l-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white" required />
-              <Button type="submit" className="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 rounded-r-lg">Đăng ký</Button>
+            <form className="flex rounded-lg overflow-hidden shadow-lg bg-white">
+              <input 
+                type="email" 
+                placeholder="Nhập email của bạn" 
+                className="flex-1 px-6 py-4 text-gray-900 focus:outline-none focus:ring-2 focus:ring-white/50 border-none h-14 bg-transparent" 
+                required 
+              />
+              <Button 
+                type="submit" 
+                className="bg-transparent text-blue-600 hover:bg-gray-50 font-semibold px-8 py-4 border-none shadow-none transition-colors duration-300 h-14 rounded-none"
+              >
+                Đăng ký
+              </Button>
             </form>
           </div>
         </div>

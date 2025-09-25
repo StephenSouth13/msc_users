@@ -6,11 +6,11 @@ import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ProjectType } from "@/lib/data/projects" // Import kiểu dữ liệu từ file data
+import { Project } from "@/lib/api-supabase" // Import Project interface từ Supabase API
 
 // Định nghĩa props mà component này nhận vào
 interface ProjectCardProps {
-  project: ProjectType;
+  project: Project;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
@@ -19,7 +19,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       <CardHeader className="p-0">
         <div className="relative aspect-[16/10] overflow-hidden">
           <Image
-            src={project.image}
+            src={project.image || '/placeholder.jpg'}
             alt={project.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -45,22 +45,30 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             Chuyên gia phụ trách:
           </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            {project.mentors.map((mentor) => (
-              <div key={mentor.name} className="flex items-center space-x-2">
-                <Image 
-                  src={mentor.avatar} 
-                  alt={mentor.name} 
-                  width={28} 
-                  height={28} 
-                  className="rounded-full border-2 border-white"
-                />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{mentor.name}</span>
-              </div>
-            ))}
+            {project.mentors && project.mentors.length > 0 ? (
+              project.mentors.map((mentor, index) => (
+                <div key={`${mentor.name || mentor.id || index}`} className="flex items-center space-x-2">
+                  <Image 
+                    src={mentor.avatar || '/placeholder-user.jpg'} 
+                    alt={mentor.name || 'Mentor'} 
+                    width={28} 
+                    height={28} 
+                    className="rounded-full border-2 border-white"
+                  />
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    {mentor.name || 'Chuyên gia'}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                Đang cập nhật thông tin mentor
+              </span>
+            )}
           </div>
         </div>
         
-        <Link href={`/du-an/${project.slug}`} className="mt-6">
+        <Link href={`/du-an/${project.slug || project.id}`} className="mt-6">
           <Button className="w-full bg-blue-800 hover:bg-blue-900 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold">
             Xem chi tiết dự án
             <ArrowRight className="ml-2 h-4 w-4" />
