@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
+import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import { 
   Eye, EyeOff, Mail, Lock, ArrowRight, CheckCircle, 
@@ -15,28 +16,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/contexts/auth-context"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { toast } from "sonner"
+
+// Dynamic import để tránh SSR với useSearchParams
+const SearchParamsHandler = dynamic(() => import('./search-params-handler'), {
+  ssr: false
+})
 
 export default function LoginPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-
-  // Check for registration success message
-  useEffect(() => {
-    const message = searchParams.get('message')
-    if (message === 'registration-success') {
-      toast.success('Đăng ký thành công!', {
-        description: 'Vui lòng đăng nhập để tiếp tục sử dụng dịch vụ.',
-        duration: 4000
-      })
-    }
-  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,20 +64,22 @@ export default function LoginPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex">
-      {/* Left Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center p-8 relative">
-        {/* Background Animation */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-32 h-32 bg-blue-200/20 dark:bg-blue-800/20 rounded-full"
-              animate={{ x: [0, 100, 0], y: [0, -100, 0], scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-              transition={{ duration: 8 + i * 2, repeat: Infinity, ease: "easeInOut" }}
-              style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
-            />
-          ))}
+    <>
+      <SearchParamsHandler />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex">
+        {/* Left Side - Login Form */}
+        <div className="flex-1 flex items-center justify-center p-8 relative">
+          {/* Background Animation */}
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-32 h-32 bg-blue-200/20 dark:bg-blue-800/20 rounded-full"
+                animate={{ x: [0, 100, 0], y: [0, -100, 0], scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 8 + i * 2, repeat: Infinity, ease: "easeInOut" }}
+                style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+              />
+            ))}
         </div>
 
         <motion.div
@@ -262,6 +257,7 @@ export default function LoginPage() {
           </div>
         </div>
       </motion.div>
-    </div>
+      </div>
+    </>
   )
 }
