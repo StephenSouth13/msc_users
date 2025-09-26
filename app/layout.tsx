@@ -110,7 +110,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" suppressHydrationWarning>
-      <body className={`${roboto.variable} ${merriweather.variable} font-sans antialiased`}>
+      <body suppressHydrationWarning className={`${roboto.variable} ${merriweather.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <LanguageProvider>
             <AuthProvider>
