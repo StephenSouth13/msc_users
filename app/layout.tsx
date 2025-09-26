@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/auth-context";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
+import ExtensionCleanup from "@/components/ExtensionCleanup";
 
 // Cấu hình font Roboto cho chữ thường
 const roboto = Roboto({
@@ -109,10 +110,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" suppressHydrationWarning>
-      <body className={`${roboto.variable} ${merriweather.variable} font-sans antialiased`}>
+      <body suppressHydrationWarning className={`${roboto.variable} ${merriweather.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <LanguageProvider>
             <AuthProvider>
+              <ExtensionCleanup />
               <div className="min-h-screen bg-background text-foreground">
                 <Header />
                 <main>{children}</main>

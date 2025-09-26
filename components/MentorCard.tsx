@@ -11,6 +11,7 @@ interface MentorCardProps {
   title: string
   degree: string
   avatar: string
+  specialties?: string[]
   linkPrefix?: "mentors" | "mscers"
 }
 
@@ -21,6 +22,7 @@ export default function MentorCard({
   title,
   degree,
   avatar,
+  specialties = [],
   linkPrefix = "mentors",
 }: MentorCardProps) {
   return (
@@ -49,6 +51,19 @@ export default function MentorCard({
         <p className="text-gray-500 dark:text-gray-400 text-sm">
           {degree}
         </p>
+
+        {specialties && specialties.length > 0 && (
+          <div className="mt-2 flex flex-wrap justify-center gap-2">
+            {specialties.map((s) => (
+              <span
+                key={s}
+                className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-2 py-1 rounded-full"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        )}
       </motion.div>
     </Link>
   )

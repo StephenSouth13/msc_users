@@ -2,15 +2,47 @@
 
 import { createBrowserClient } from '@supabase/ssr'
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+// Minimal fallback stub for Supabase client when env vars are missing
+function createFallbackClient() {
+  // chainable query builder stub
+  const queryStub = () => {
+    const q: any = {}
+    q.select = async () => ({ data: [], error: null })
+    q.order = () => q
+    q.limit = () => q
+    q.ilike = () => q
+    q.eq = () => q
+    q.single = async () => ({ data: null, error: { code: 'PGRST116', message: 'Not found' } })
+    q.insert = () => ({ select: async () => ({ data: null, error: null }) })
+    return q
+  }
+
+  return {
+    from: (_table: string) => queryStub(),
+    auth: {
+      // auth stubs return an error to indicate missing config
+      signUp: async () => ({ data: null, error: new Error('Supabase not configured') }),
+      signInWithPassword: async () => ({ data: null, error: new Error('Supabase not configured') }),
+      getUser: async () => ({ data: { user: null }, error: null }),
+      signOut: async () => ({ error: null }),
+    },
+  }
+}
 
 // Client-only Supabase client for browser
 export function createClient() {
-  return createBrowserClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  )
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.warn('Supabase client not configured: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is missing. Using fallback stub.')
+    }
+    return createFallbackClient() as any
+  }
+
+  return createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 }
 
 // Types exports - Simple client types
