@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/auth-context";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
+import ExtensionCleanup from "@/components/ExtensionCleanup";
 
 // Cấu hình font Roboto cho chữ thường
 const roboto = Roboto({
