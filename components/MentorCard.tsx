@@ -11,6 +11,7 @@ interface MentorCardProps {
   title: string
   degree: string
   avatar: string
+  specialties?: string[]
   linkPrefix?: "mentors" | "mscers"
 }
 
@@ -21,6 +22,7 @@ export default function MentorCard({
   title,
   degree,
   avatar,
+  specialties = [],
   linkPrefix = "mentors",
 }: MentorCardProps) {
   return (
