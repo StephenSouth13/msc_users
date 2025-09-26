@@ -114,6 +114,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <LanguageProvider>
             <AuthProvider>
+              <ExtensionCleanup />
               <div className="min-h-screen bg-background text-foreground">
                 <Header />
                 <main>{children}</main>
