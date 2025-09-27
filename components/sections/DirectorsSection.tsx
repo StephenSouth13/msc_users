@@ -50,7 +50,7 @@ export default function DirectorsSection() {
                 degree={director.company}
                 avatar={director.avatar}
                 specialties={director.skills} // Thuộc tính này sẽ hoạt động nếu đã được định nghĩa trong MentorCard.tsx
-                linkPrefix="mscers"
+                linkPrefix="mscer"
               />
             </motion.div>
           ))}
