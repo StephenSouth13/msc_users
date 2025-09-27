@@ -52,18 +52,21 @@ export default function MentorCard({
           {degree}
         </p>
 
-        {specialties && specialties.length > 0 && (
-          <div className="mt-2 flex flex-wrap justify-center gap-2">
-            {specialties.map((s) => (
-              <span
-                key={s}
-                className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-2 py-1 rounded-full"
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-        )}
+        {/* 
+{specialties && specialties.length > 0 && (
+  <div className="mt-2 flex flex-wrap justify-center gap-2">
+    {specialties.map((s) => (
+      <span
+        key={s}
+        className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-2 py-1 rounded-full"
+      >
+        {s}
+      </span>
+    ))}
+  </div>
+)} 
+*/}
+
       </motion.div>
     </Link>
   )
