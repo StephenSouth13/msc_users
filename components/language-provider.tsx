@@ -24,6 +24,7 @@ const translations = {
     "nav.blog": "Chia sẻ",
     "nav.contact": "Liên hệ",
     "nav.login": "Đăng nhập",
+    "nav.hrm": "Hệ thống HRM",
     "nav.register": "Đăng ký",
     "nav.profile": "Hồ sơ năng lực",
     "hero.title": "MSC Center – Viện đào tạo kĩ năng",

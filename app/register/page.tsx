@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Mail, Lock, User, Phone, Eye, EyeOff, Facebook, Chrome, ArrowRight, Shield, CheckCircle, Star, Loader2 } from "lucide-react"
+import { Mail, Lock, User, Phone, Eye, EyeOff, Facebook, Chrome, ArrowRight, Shield, CheckCircle, Star, Loader2,Building2  } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -424,7 +424,18 @@ export default function RegisterPage() {
                     </span>
                   </div>
                 </div>
-
+                     {/* THÊM NÚT ĐĂNG NHẬP HRM */}
+                                    <Link 
+                                      href="https://crm.msc.edu.vn/" 
+                                      target="_blank"
+                                      className="w-full inline-block"
+                                    >
+                                      <Button variant="outline" className="w-full h-12" disabled={isLoading}>
+                                        <Building2 className="h-5 w-5 mr-2 text-blue-700 dark:text-gray-900" />
+                                        Đăng ký vào hệ thống HRM
+                                      </Button>
+                                    </Link>
+                                    {/* END NÚT ĐĂNG NHẬP HRM */}
                 {/* Social Register */}
                 <div className="grid grid-cols-2 gap-3">
                   <Button

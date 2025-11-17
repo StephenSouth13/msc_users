@@ -8,7 +8,8 @@ import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import { 
   Eye, EyeOff, Mail, Lock, ArrowRight, CheckCircle, 
-  Shield, Users, Award, AlertCircle, Chrome, Facebook 
+  Shield, Users, Award, AlertCircle, Chrome, Facebook,
+  Building2 // Thêm icon cho HRM/CRM
 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -181,7 +182,18 @@ export default function LoginPage() {
                   )}
                 </Button>
               </form>
-
+                  {/* THÊM NÚT ĐĂNG NHẬP HRM */}
+                <Link 
+                  href="https://crm.msc.edu.vn/" 
+                  target="_blank"
+                  className="w-full inline-block"
+                >
+                  <Button variant="outline" className="w-full h-12" disabled={isLoading}>
+                    <Building2 className="h-5 w-5 mr-2 text-blue-700 dark:text-gray-900" />
+                    Đăng nhập vào hệ thống HRM
+                  </Button>
+                </Link>
+                {/* END NÚT ĐĂNG NHẬP HRM */}
               <Separator className="my-6" />
 
               {/* Social Login */}
@@ -194,6 +206,8 @@ export default function LoginPage() {
                   <Facebook className="h-5 w-5 mr-2 text-blue-600" />
                   Đăng nhập với Facebook
                 </Button>
+                
+                
               </div>
 
               {/* Register */}

@@ -103,7 +103,7 @@ const Header = () => {
 
             <div className="absolute inset-0 opacity-30"><motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" animate={{ x: ["-100%", "100%"] }} transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}/></div>
             <div className="container mx-auto flex justify-between items-center h-full px-4 sm:px-6 lg:px-8 relative z-10">
-              <div className="flex items-center space-x-4 text-xs flex-wrap"><span className="hidden sm:block">📧 msc.edu.vn@gmail.com</span><span className="hidden md:block">📞 (+84) 329 381 489</span><span className="block">🌟 Mekong Skill Center</span></div>
+              <div className="flex items-center space-x-4 text-xs flex-wrap"><span className="hidden sm:block">📧 msc.edu.vn@gmail.com</span><span className="hidden md:block">📞 (+84) 329 381 489</span><span className="block">🌟 MSC</span></div>
               <div className="flex items-center space-x-2">
                 <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="sm" className="flex items-center space-x-1 text-white hover:bg-white/20 h-7"><span className="text-sm">{language === "vi" ? "🇻🇳" : "🇬🇧"}</span><ChevronDown className="h-3 w-3" /></Button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem onClick={() => setLanguage("vi")}>🇻🇳 Tiếng Việt</DropdownMenuItem><DropdownMenuItem onClick={() => setLanguage("en")}>🇬🇧 English</DropdownMenuItem></DropdownMenuContent></DropdownMenu>
                 
