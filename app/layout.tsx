@@ -27,7 +27,7 @@ const merriweather = Merriweather({
 // Nó cũng sẽ được sử dụng để tạo các thẻ OpenGraph và Twitter Card
 export const metadata: Metadata = {
   title: {
-    default: "MSC Center - Viện Đào tạo Kỹ năng cho sinh viên và người đi làm",
+    default: "MSC Center - Trung tâm đào tạo và phát triển kỹ năng chuyên nghiệp MSC Center - Học tập và nỗ lực suốt đời",
     template: "%s | MSC Center",
   },
   description: "Trung tâm đào tạo và phát triển kỹ năng chuyên nghiệp MSC Center - Học tập và nỗ lực suốt đời",
