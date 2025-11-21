@@ -426,7 +426,7 @@ export default function RegisterPage() {
                 </div>
                      {/* THÊM NÚT ĐĂNG NHẬP HRM */}
                                     <Link 
-                                      href="https://hrm.msc.edu.vn/auth/login" 
+                                      href="https://hrm.msc.edu.vn/" 
                                       target="_blank"
                                       className="w-full inline-block"
                                     >
