@@ -184,7 +184,7 @@ export default function LoginPage() {
               </form>
                   {/* THÊM NÚT ĐĂNG NHẬP HRM */}
                 <Link 
-                  href="https://crm.msc.edu.vn/" 
+                  href="https://hrm.msc.edu.vn/" 
                   target="_blank"
                   className="w-full inline-block"
                 >
