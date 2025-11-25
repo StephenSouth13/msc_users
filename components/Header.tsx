@@ -127,7 +127,7 @@ const Header = () => {
   </Button>
 </Link>
 
-                        <Link href="/register" className="hidden sm:block"><Button size="sm" className="bg-white text-blue-600 hover:bg-blue-50 h-7 text-xs"><UserPlus className="h-3 w-3 mr-1" />{t("nav.register")}</Button></Link>
+                        
                       </>
                     ) : (
                       <>
