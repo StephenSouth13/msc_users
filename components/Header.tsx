@@ -123,7 +123,7 @@ const Header = () => {
     className="text-white hover:bg-white/20 h-7 text-xs"
   >
     <LogIn className="h-3 w-3 mr-1" />
-    {t("nav.login")}
+    {t("nav.mscerlogin")}
   </Button>
 </Link>
 
