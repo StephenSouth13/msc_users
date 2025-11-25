@@ -112,7 +112,21 @@ const Header = () => {
                   <>
                     {!isAuthenticated ? (
                       <>
-                        <Link href="/login" className="hidden sm:block"><Button variant="ghost" size="sm" className="text-white hover:bg-white/20 h-7 text-xs"><LogIn className="h-3 w-3 mr-1" />{t("nav.login")}</Button></Link>
+                        <Link 
+  href="https://mscer.msc.edu.vn/" 
+  target="_blank"
+  className="hidden sm:block"
+>
+  <Button 
+    variant="ghost" 
+    size="sm" 
+    className="text-white hover:bg-white/20 h-7 text-xs"
+  >
+    <LogIn className="h-3 w-3 mr-1" />
+    {t("nav.login")}
+  </Button>
+</Link>
+
                         <Link href="/register" className="hidden sm:block"><Button size="sm" className="bg-white text-blue-600 hover:bg-blue-50 h-7 text-xs"><UserPlus className="h-3 w-3 mr-1" />{t("nav.register")}</Button></Link>
                       </>
                     ) : (
