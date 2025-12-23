@@ -102,6 +102,30 @@ export interface Project {
   category?: string
 }
 
+// This interface now matches the structure from data/mscer.ts and the database table
+export interface MSCer {
+  id: string;
+  name: string;
+  company?: string;
+  position?: string;
+  avatar?: string;
+  achievement?: string;
+  testimonial?: string;
+  graduationYear?: string;
+  promotion?: string;
+  socialImpact?: string;
+  course?: string;
+  skills?: string[];
+  achievements?: string[];
+  mentoring?: string;
+  background?: { // This is a JSONB field
+    education?: string;
+    previousRole?: string;
+    experience?: string;
+  };
+  created_at?: string;
+}
+
 export interface BlogPost {
   id: string
   title: string
@@ -125,47 +149,21 @@ export const api = {
   // Programs
   getPrograms: async (): Promise<Program[]> => {
     try {
-      console.log('🔍 Starting getPrograms API call...')
-      console.log('🔍 SUPABASE_URL:', SUPABASE_URL)
-      console.log('🔍 SUPABASE_ANON_KEY:', SUPABASE_ANON_KEY ? 'Present' : 'Missing')
-      
       const supabase = createClient()
-      console.log('🔍 Supabase client created successfully')
-      
       const { data, error } = await supabase
         .from('programs')
         .select('*')
       
-      console.log('🔍 Supabase query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Error details:', error ? {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code
-      } : null)
-      console.log('🔍 Data:', data)
-      console.log('🔍 Data length:', data?.length || 0)
-      
       if (error) {
-        console.error('❌ Supabase error details:', error)
-        
-        // Check if it's RLS related error
         if (error.code === 'PGRST116' || error.message.includes('row-level security')) {
           console.error('❌ RLS Policy Error - Check Supabase RLS policies for programs table')
-          throw new Error('Không có quyền truy cập dữ liệu programs. Vui lòng liên hệ admin.')
         }
-        
         throw error
       }
       
-      console.log('✅ Programs fetched successfully:', data?.length || 0, 'records')
       return data || []
     } catch (error) {
       console.error('❌ Error fetching programs:', error)
-      
-      // Return empty array for graceful degradation
-      console.log('⚠️ Returning empty array due to error')
       return []
     }
   },
@@ -173,57 +171,203 @@ export const api = {
   // Projects
   getProjects: async (): Promise<Project[]> => {
     try {
-      console.log('🔍 Starting getProjects API call...')
-      
       const supabase = createClient()
       const { data, error } = await supabase
         .from('projects')
         .select('*')
       
-      console.log('🔍 Projects query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      console.log('🔍 Data length:', data?.length || 0)
-      
       if (error) {
         console.error('❌ Supabase error:', error)
         throw error
       }
-      
-      console.log('✅ Projects fetched successfully:', data?.length || 0, 'records')
       return data || []
     } catch (error) {
       console.error('❌ Error fetching projects:', error)
       return []
     }
   },
+  
+  getProjectById: async (id: string): Promise<Project | null> => {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          return null; // Not found
+        }
+        throw error;
+      }
+      return data;
+    } catch (error) {
+      console.error('❌ Error fetching project by id:', error);
+      return null;
+    }
+  },
+
+  // Get single project by slug
+  getProjectBySlug: async (slug: string): Promise<Project | null> => {
+    try {
+      const supabase = createClient()
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('slug', slug)
+        .single()
+      
+      if (error) {
+        if (error.code === 'PGRST116') {
+          return null // Project not found
+        }
+        throw error
+      }
+      
+      return data
+    } catch (error) {
+      console.error('❌ Error fetching project by slug:', error)
+      return null
+    }
+  },
+
+  updateProject: async (id: string, projectData: Partial<Project>): Promise<Project> => {
+    try {
+      const response = await fetch(`/api/projects/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(projectData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update project');
+      }
+
+      const { data } = await response.json();
+      return data;
+    } catch (error) {
+      console.error('❌ Error updating project:', error);
+      throw error;
+    }
+  },
+
+  deleteProject: async (id: string): Promise<void> => {
+    try {
+      const response = await fetch(`/api/projects/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete project');
+      }
+    } catch (error) {
+      console.error('❌ Error deleting project:', error);
+      throw error;
+    }
+  },
+
+  // MSCers
+  getMSCer: async (): Promise<MSCer[]> => {
+    try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('mscers')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('❌ Supabase error fetching mscers:', error);
+            throw error;
+        }
+
+        return data || [];
+    } catch (error) {
+        console.error('❌ Error fetching mscers:', error);
+        return [];
+    }
+  },
+
+  addMSCer: async (mscerData: Partial<MSCer>): Promise<MSCer> => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10-second timeout
+
+    try {
+      const response = await fetch('/api/mscer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(mscerData),
+        signal: controller.signal, // AbortSignal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to add MSCer');
+      }
+
+      const { data } = await response.json();
+      return data;
+    } catch (error: any) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        console.error('❌ API request timed out');
+        throw new Error('Yêu cầu đã hết thời gian. Máy chủ không phản hồi.');
+      }
+      console.error('❌ Error adding MSCer:', error);
+      throw error;
+    }
+  },
+
+  getMSCerById: async (id: string): Promise<MSCer | null> => {
+      try {
+          const supabase = createClient();
+          const { data, error } = await supabase
+              .from('mscers')
+              .select('*')
+              .eq('id', id)
+              .single();
+
+          if (error) {
+              if (error.code === 'PGRST116') {
+                  return null; // Not found is not an error
+              }
+              console.error('❌ Supabase error fetching mscer by id:', error);
+              throw error;
+          }
+
+          return data;
+      } catch (error) {
+          console.error(`❌ Error fetching mscer by id ${id}:`, error);
+          return null;
+      }
+  },
 
   // Blog posts
   getBlogPosts: async (): Promise<BlogPost[]> => {
     try {
-      console.log('🔍 Starting getBlogPosts API call...')
-      
       const supabase = createClient()
       const { data, error } = await supabase
         .from('allblogposts')
         .select('*')
         .order('publish_date', { ascending: false })
       
-      console.log('🔍 Blog posts query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      console.log('🔍 Data length:', data?.length || 0)
-      
       if (error) {
-        console.error('❌ Supabase error:', error)
         throw error
       }
       
-      // Transform database data to match BlogPost interface
       const blogPosts: BlogPost[] = (data || []).map((post: any) => ({
         id: post.id.toString(),
         title: post.title,
-        content: post.content || post.details_blog, // Use content field if available, fallback to details_blog
+        content: post.content || post.details_blog,
         excerpt: post.excerpt,
         image: post.image,
         author: post.author,
@@ -233,10 +377,9 @@ export const api = {
         read_time: post.read_time,
         category: post.category,
         slug: post.slug,
-        tags: [] // Database doesn't have tags field, so empty array
+        tags: []
       }))
       
-      console.log('✅ Blog posts fetched successfully:', blogPosts.length, 'records')
       return blogPosts
     } catch (error) {
       console.error('❌ Error fetching blog posts:', error)
@@ -247,8 +390,6 @@ export const api = {
   // Get single blog post by slug
   getBlogPostBySlug: async (slug: string): Promise<BlogPost | null> => {
     try {
-      console.log('🔍 Starting getBlogPostBySlug API call for:', slug)
-      
       const supabase = createClient()
       const { data, error } = await supabase
         .from('allblogposts')
@@ -256,23 +397,17 @@ export const api = {
         .eq('slug', slug)
         .single()
       
-      console.log('🔍 Blog post by slug query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      
       if (error) {
-        console.error('❌ Supabase error:', error)
         if (error.code === 'PGRST116') {
           return null // Post not found
         }
         throw error
       }
       
-      // Transform database data to match BlogPost interface
       const blogPost: BlogPost = {
         id: data.id.toString(),
         title: data.title,
-        content: data.content || data.details_blog, // Use content field if available, fallback to details_blog
+        content: data.content || data.details_blog,
         excerpt: data.excerpt,
         context: data.context,
         image: data.image,
@@ -286,7 +421,6 @@ export const api = {
         tags: []
       }
       
-      console.log('✅ Blog post fetched successfully:', blogPost.title)
       return blogPost
     } catch (error) {
       console.error('❌ Error fetching blog post by slug:', error)
@@ -297,8 +431,6 @@ export const api = {
   // Get blog posts by category
   getBlogPostsByCategory: async (category: string): Promise<BlogPost[]> => {
     try {
-      console.log('🔍 Starting getBlogPostsByCategory API call for:', category)
-      
       const supabase = createClient()
       const { data, error } = await supabase
         .from('allblogposts')
@@ -306,20 +438,14 @@ export const api = {
         .ilike('category', `%${category}%`)
         .order('publish_date', { ascending: false })
       
-      console.log('🔍 Blog posts by category query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data length:', data?.length || 0)
-      
       if (error) {
-        console.error('❌ Supabase error:', error)
         throw error
       }
       
-      // Transform database data to match BlogPost interface
       const blogPosts: BlogPost[] = (data || []).map((post: any) => ({
         id: post.id.toString(),
         title: post.title,
-        content: post.content || post.details_blog, // Use content field if available, fallback to details_blog
+        content: post.content || post.details_blog,
         excerpt: post.excerpt,
         image: post.image,
         author: post.author,
@@ -332,7 +458,6 @@ export const api = {
         tags: []
       }))
       
-      console.log('✅ Blog posts by category fetched successfully:', blogPosts.length, 'records')
       return blogPosts
     } catch (error) {
       console.error('❌ Error fetching blog posts by category:', error)
@@ -343,8 +468,6 @@ export const api = {
   // Get top posts from view
   getTopPosts: async (): Promise<any[]> => {
     try {
-      console.log('🔍 Starting getTopPosts API call...')
-      
       const supabase = createClient()
       const { data, error } = await supabase
         .from('top_posts')
@@ -352,55 +475,16 @@ export const api = {
         .order('views', { ascending: false })
         .limit(5)
       
-      console.log('🔍 Top posts query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      console.log('🔍 Data length:', data?.length || 0)
-      
       if (error) {
-        console.error('❌ Supabase error:', error)
         throw error
       }
       
-      console.log('✅ Top posts fetched successfully:', data?.length || 0, 'records')
       return data || []
     } catch (error) {
       console.error('❌ Error fetching top posts:', error)
       return []
     }
   },
-
-  // Get single project by slug
-  getProjectBySlug: async (slug: string): Promise<Project | null> => {
-    try {
-      console.log('🔍 Starting getProjectBySlug API call for:', slug)
-      
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('slug', slug)
-        .single()
-      
-      console.log('🔍 Project by slug query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      
-      if (error) {
-        console.error('❌ Supabase error:', error)
-        if (error.code === 'PGRST116') {
-          return null // Project not found
-        }
-        throw error
-      }
-      
-      console.log('✅ Project fetched successfully:', data.title)
-      return data
-    } catch (error) {
-      console.error('❌ Error fetching project by slug:', error)
-      return null
-    }
-  }
 }
 
 // Client API for user operations
@@ -409,13 +493,10 @@ export const apiClient = {
     try {
       const supabase = createClient()
       
-      console.log('🔐 Starting registration process for:', userData.email)
-      
-      // First, create user in Supabase Auth with phone number
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: userData.email,
         password: userData.password,
-        phone: userData.phone, // Store phone in auth.users
+        phone: userData.phone,
         options: {
           data: {
             full_name: userData.fullName || userData.name,
@@ -427,7 +508,6 @@ export const apiClient = {
       })
 
       if (authError) {
-        console.error('❌ Auth registration error:', authError)
         return {
           success: false,
           error: authError.message === 'User already registered' ? 
@@ -436,54 +516,28 @@ export const apiClient = {
         }
       }
 
-      console.log('✅ Supabase Auth registration successful for user:', authData.user?.email)
-
-      // If auth succeeds, create profile in profiles table
       if (authData.user) {
         try {
-          console.log('🔐 Creating profile for user ID:', authData.user.id)
-          
           const profileData = {
-            id: authData.user.id, // Reference to auth.users(id)
+            id: authData.user.id,
             full_name: userData.fullName || userData.name,
             avatar_url: null,
             role: 'user',
             phone: userData.phone || null
-            // created_at sẽ tự động được set bởi default now()
           }
           
-          console.log('🔐 Profile data to insert:', profileData)
-          
-          const { data: insertedProfile, error: profileError } = await supabase
+          const { error: profileError } = await supabase
             .from('profiles')
             .insert([profileData])
-            .select()
-            .single()
 
           if (profileError) {
             console.error('❌ Failed to create profile:', profileError)
-            console.error('❌ Profile error details:', {
-              message: profileError.message,
-              details: profileError.details,
-              hint: profileError.hint,
-              code: profileError.code
-            })
-            
-            // Don't fail the whole registration if profile creation fails
-            // Auth account was created successfully, so registration is considered successful
-            console.log('⚠️ Profile creation failed, but auth registration succeeded - continuing as success')
-          } else {
-            console.log('✅ User profile created successfully in profiles table:', insertedProfile)
           }
         } catch (profileTableError) {
           console.error('❌ Profile table error:', profileTableError)
-          // Don't fail the whole registration - auth account exists
-          console.log('⚠️ Profile table error, but auth registration succeeded - continuing as success')
         }
       }
 
-      // Always return success if auth registration succeeded
-      // This ensures user gets redirected to login page
       return {
         success: true,
         data: {
@@ -504,20 +558,14 @@ export const apiClient = {
 export const authAPI = {
   login: async (email: string, password: string) => {
     try {
-      console.log('🔐 Starting login process for:', email)
       const supabase = createClient()
       
-      // Try Supabase Auth with real accounts
-      console.log('🔐 Attempting Supabase Auth login...')
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password
       })
 
       if (authError) {
-        console.log('⚠️ Supabase Auth failed:', authError.message)
-        
-        // Return error for real auth failure
         return {
           success: false,
           error: authError.message === 'Invalid login credentials' ? 
@@ -526,9 +574,6 @@ export const authAPI = {
         }
       }
 
-      console.log('✅ Supabase Auth successful for user:', authData.user?.email)
-      
-      // Try to get additional user data from profiles table first
       try {
         const { data: profileData } = await supabase
           .from('profiles')
@@ -537,8 +582,6 @@ export const authAPI = {
           .single()
           
         if (profileData) {
-          console.log('✅ Found user profile data')
-          // Merge auth data with profiles table data
           return {
             success: true,
             data: {
@@ -562,7 +605,6 @@ export const authAPI = {
         console.log('⚠️ Could not fetch profile data, using auth data only')
       }
       
-      // Return standard auth data if no additional user data found
       return {
         success: true,
         data: {
@@ -599,14 +641,9 @@ export const authAPI = {
   getCurrentUser: async (): Promise<UserData | null> => {
     try {
       const supabase = createClient()
-      
-      // First try to get user from Supabase Auth
       const { data: { user } } = await supabase.auth.getUser()
       
       if (user) {
-        console.log('✅ Found authenticated user:', user.email)
-        
-        // Try to get user data from profiles table first
         try {
           const { data: profileData, error: profileError } = await supabase
             .from('profiles')
@@ -615,7 +652,6 @@ export const authAPI = {
             .single()
 
           if (!profileError && profileData) {
-            console.log('✅ Found user profile data')
             return {
               id: user.id,
               email: user.email || '',
@@ -630,14 +666,10 @@ export const authAPI = {
               created_at: profileData.created_at
             }
           } else {
-            console.log('⚠️ No profile data found, using auth data only')
           }
         } catch (profileTableError) {
-          console.log('⚠️ Profiles table not accessible, using auth data only')
         }
 
-        // Final fallback to auth data only
-        console.log('⚠️ Using auth data only')
         return {
           id: user.id,
           email: user.email || '',

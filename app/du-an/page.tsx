@@ -186,7 +186,7 @@ export default function ProjectsPage() {
                       <div className="mt-auto">
                           <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Chuyên gia phụ trách:</p> {/* Chữ label */}
                           <div className="flex items-center space-x-2">
-                             {project.mentors?.map((mentor: any, index: number) => (
+                            {Array.isArray(project.mentors) && project.mentors.map((mentor: any, index: number) => (
                                  <div key={index} className="flex items-center space-x-2">
                                      <Image src={mentor.avatar || '/placeholder-avatar.jpg'} alt={mentor.name} width={32} height={32} className="rounded-full border-2 border-white dark:border-gray-700"/> {/* Border ảnh mentor */}
                                      <span className="text-sm text-gray-800 dark:text-gray-200">{mentor.name}</span> {/* Tên mentor */}
