@@ -29,7 +29,6 @@ export default function ProjectDetailPage({ params }: Props) {
       try {
         setLoading(true)
         
-        // Fetch current project
         const currentProject = await api.getProjectBySlug(params.slug)
         if (!currentProject) {
           notFound()
@@ -37,7 +36,6 @@ export default function ProjectDetailPage({ params }: Props) {
         }
         setProject(currentProject)
 
-        // Fetch related projects (same category)
         const allProjects = await api.getProjects()
         const related = allProjects
           .filter((p) => p.id !== currentProject.id && p.category === currentProject.category)
@@ -69,6 +67,23 @@ export default function ProjectDetailPage({ params }: Props) {
     notFound()
   }
 
+  // SAFEGUARD: Parse technologies and mentors safely to prevent crashes.
+  const getAsArray = (data: unknown): any[] => {
+    if (Array.isArray(data)) return data;
+    if (typeof data === 'string') {
+      try {
+        const parsed = JSON.parse(data);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  };
+
+  const technologies = getAsArray(project.technologies);
+  const mentors = getAsArray(project.mentors);
+
   const getStatusColor = (status?: string) => {
     switch (status) {
       case 'completed':
@@ -98,7 +113,6 @@ export default function ProjectDetailPage({ params }: Props) {
   return (
     <div className="min-h-screen pt-20 bg-gray-50 dark:bg-gray-900">
       <div className="container py-8">
-        {/* Back Button */}
         <div className="mb-8">
           <Link href="/du-an">
             <Button variant="ghost" className="hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -109,10 +123,8 @@ export default function ProjectDetailPage({ params }: Props) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Main Content */}
           <div className="lg:col-span-3">
             <article className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-              {/* Hero Image */}
               <div className="relative h-96">
                 <Image 
                   src={project.image || "/placeholder.svg"} 
@@ -138,9 +150,7 @@ export default function ProjectDetailPage({ params }: Props) {
                 </div>
               </div>
 
-              {/* Project Content */}
               <div className="p-8">
-                {/* Basic Description */}
                 <div className="mb-8">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Mô tả dự án</h2>
                   <div className="text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -159,12 +169,11 @@ export default function ProjectDetailPage({ params }: Props) {
                   </div>
                 </div>
 
-                {/* Technologies */}
-                {project.technologies && project.technologies.length > 0 && (
+                {technologies.length > 0 && (
                   <div className="mb-8">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Công nghệ sử dụng</h3>
                     <div className="flex flex-wrap gap-2">
-                      {project.technologies.map((tech, index) => (
+                      {technologies.map((tech, index) => (
                         <Badge key={index} variant="outline" className="text-sm">
                           {tech}
                         </Badge>
@@ -173,7 +182,6 @@ export default function ProjectDetailPage({ params }: Props) {
                   </div>
                 )}
 
-                {/* Detailed Content with Full Markdown Support */}
                 {project.detailproject && (
                   <div className="mb-8">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Chi tiết dự án</h2>
@@ -253,12 +261,11 @@ export default function ProjectDetailPage({ params }: Props) {
                   </div>
                 )}
 
-                {/* Team Section */}
-                {project.mentors && project.mentors.length > 0 && (
+                {mentors.length > 0 && (
                   <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Đội ngũ thực hiện</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {project.mentors.map((mentor, index) => (
+                      {mentors.map((mentor, index) => (
                         <Card key={index} className="p-4">
                           <div className="flex items-center space-x-4">
                             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
@@ -281,7 +288,6 @@ export default function ProjectDetailPage({ params }: Props) {
               </div>
             </article>
 
-            {/* Related Projects */}
             {relatedProjects.length > 0 && (
               <div className="mt-12">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Dự án liên quan</h2>
@@ -324,7 +330,6 @@ export default function ProjectDetailPage({ params }: Props) {
             )}
           </div>
 
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sticky top-8">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Thông tin dự án</h3>
@@ -346,10 +351,10 @@ export default function ProjectDetailPage({ params }: Props) {
                   </div>
                 )}
 
-                {project.mentors && project.mentors.length > 0 && (
+                {mentors.length > 0 && (
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Thành viên:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">{project.mentors.length} người</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{mentors.length} người</span>
                   </div>
                 )}
               </div>

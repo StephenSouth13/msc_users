@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Roboto, Merriweather } from 'next/font/google';
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/language-provider";
@@ -8,20 +7,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
 import ExtensionCleanup from "@/components/ExtensionCleanup";
-
-// Cấu hình font Roboto cho chữ thường
-const roboto = Roboto({
-  subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "700"],
-  variable: "--font-roboto",
-});
-
-// Cấu hình font Merriweather cho tiêu đề
-const merriweather = Merriweather({
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  variable: "--font-merriweather",
-});
 
 // Metadata này sẽ được tự động đưa vào thẻ <head>
 // Nó cũng sẽ được sử dụng để tạo các thẻ OpenGraph và Twitter Card
@@ -110,7 +95,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" suppressHydrationWarning>
-      <body suppressHydrationWarning className={`${roboto.variable} ${merriweather.variable} font-sans antialiased`}>
+      <body suppressHydrationWarning className={"font-sans antialiased"}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <LanguageProvider>
             <AuthProvider>

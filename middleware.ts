@@ -2,6 +2,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const ADMIN_EMAIL_DOMAIN = '@msc.com';
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
@@ -12,11 +14,9 @@ export async function middleware(request: NextRequest) {
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
   const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // If env vars are missing (common in local/dev preview), skip Supabase middleware
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-console
-      console.warn('Skipping Supabase middleware: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY not set')
+      console.warn('Skipping Supabase middleware: ENV Vars not set')
     }
     return response
   }
@@ -27,33 +27,37 @@ export async function middleware(request: NextRequest) {
         return request.cookies.get(name)?.value
       },
       set(name: string, value: string, options: any) {
-        // update request cookies and response cookies safely
         request.cookies.set({ name, value })
-        response = NextResponse.next({
-          request: {
-            headers: request.headers,
-          },
-        })
+        response = NextResponse.next({ request: { headers: request.headers } })
         response.cookies.set({ name, value, ...options })
       },
       remove(name: string, options: any) {
         request.cookies.delete(name)
-        response = NextResponse.next({
-          request: {
-            headers: request.headers,
-          },
-        })
+        response = NextResponse.next({ request: { headers: request.headers } })
         response.cookies.delete({ name, ...options })
       },
     },
   })
 
   try {
-    // This will refresh session if expired - required for Server Components
-    await supabase.auth.getUser()
+    const { data: { user } } = await supabase.auth.getUser();
+    const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
+
+    // If trying to access an admin route
+    if (isAdminRoute) {
+      // If user is not logged in, redirect to the general login page
+      if (!user) {
+        // Assuming your general login page is at '/login'
+        return NextResponse.redirect(new URL('/login', request.url));
+      }
+      
+      // If user is logged in but is not an admin, redirect to homepage
+      if (!user.email?.endsWith(ADMIN_EMAIL_DOMAIN)) {
+        return NextResponse.redirect(new URL('/', request.url));
+      }
+    }
+
   } catch (err) {
-    // Do not crash the middleware if Supabase call fails
-    // eslint-disable-next-line no-console
     console.error('Supabase middleware error:', err)
   }
 

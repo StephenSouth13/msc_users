@@ -45,7 +45,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             Chuyên gia phụ trách:
           </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            {project.mentors && project.mentors.length > 0 ? (
+            {Array.isArray(project.mentors) && project.mentors.length > 0 ? (
               project.mentors.map((mentor, index) => (
                 <div key={`${mentor.name || mentor.id || index}`} className="flex items-center space-x-2">
                   <Image 

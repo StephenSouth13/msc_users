@@ -183,22 +183,15 @@ export default function ProjectsPage() {
                       <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">{project.title}</CardTitle> {/* Chữ tiêu đề */}
                       <p className="text-gray-600 dark:text-gray-300 mb-6 flex-grow">{project.description}</p> {/* Chữ mô tả */}
                       
-                      <div className="mt-auto space-y-3">
-                          <div className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-200">
-                              <Users className="h-4 w-4 mr-2 flex-shrink-0" />
-                              <span>Người hướng dẫn:</span>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                              {Array.isArray(project.mentors) && project.mentors.length > 0 && project.mentors[0] !== '' ? (
-                                  project.mentors.map((mentorName: string, index: number) => (
-                                      <Badge key={index} variant="outline" className="font-normal bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-200">
-                                          <Award className="h-3 w-3 mr-1.5" />
-                                          {mentorName}
-                                      </Badge>
-                                  ))
-                              ) : (
-                                  <p className="text-sm text-gray-500 dark:text-gray-400 italic">Chưa có thông tin</p>
-                              )}
+                      <div className="mt-auto">
+                          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Chuyên gia phụ trách:</p> {/* Chữ label */}
+                          <div className="flex items-center space-x-2">
+                             {project.mentors?.map((mentor: any, index: number) => (
+                                 <div key={index} className="flex items-center space-x-2">
+                                     <Image src={mentor.avatar || '/placeholder-avatar.jpg'} alt={mentor.name} width={32} height={32} className="rounded-full border-2 border-white dark:border-gray-700"/> {/* Border ảnh mentor */}
+                                     <span className="text-sm text-gray-800 dark:text-gray-200">{mentor.name}</span> {/* Tên mentor */}
+                                 </div>
+                             ))}
                           </div>
                       </div>
                       <Link href={`/du-an/${project.slug}`} className="mt-6">
