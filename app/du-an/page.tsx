@@ -192,6 +192,7 @@ export default function ProjectsPage() {
                                      <span className="text-sm text-gray-800 dark:text-gray-200">{mentor.name}</span> {/* Tên mentor */}
                                  </div>
                              ))}
+
                           </div>
                       </div>
                       <Link href={`/du-an/${project.slug}`} className="mt-6">
