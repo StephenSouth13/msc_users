@@ -184,7 +184,7 @@ export default function ProjectsPage() {
                       <p className="text-gray-600 dark:text-gray-300 mb-6 flex-grow">{project.description}</p> {/* Chữ mô tả */}
                       
                       <div className="mt-auto">
-                          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Chuyên gia phụ trách:</p> {/* Chữ label */}
+                          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Mentoring & Coaching:</p> {/* Chữ label */}
                           <div className="flex items-center space-x-2">
                              {project.mentors?.map((mentor: any, index: number) => (
                                  <div key={index} className="flex items-center space-x-2">

@@ -16,8 +16,7 @@ const MSCersSection = () => {
       position: "Phó Giám Đốc MSC",
       company: "MSC",
       avatar: "/MSCers/DTK.webp",
-      achievement: "Tốt nghiệp và trưởng thành từ MSC",
-      testimonial: "MSC Center đã giúp tôi phát triển kỹ năng lãnh đạo và tư duy chiến lược một cách toàn diện.",
+      achievement: "Tốt nghiệp và trưởng thành từ MSC"
     },
     {
       id: 2,
@@ -25,8 +24,7 @@ const MSCersSection = () => {
       position: "Trưởng phòng CNTT",
       company: "MSC",
       avatar: "/MSCers/QTL.webp",
-      achievement: "Tốt nghiệp và trưởng thành từ HKDN",
-      testimonial: "Những kiến thức về quản lý dự án tại MSC đã giúp tôi thành công trong vai trò Trưởng phòng CNTT.",
+      achievement: "Tốt nghiệp và trưởng thành từ HKDN"
     },
     {
       id: 3,
@@ -34,8 +32,7 @@ const MSCersSection = () => {
       position: "Nhân sự Marketing",
       company: "MSC",
       avatar: "/MSCers/LPU.webp",
-      achievement: "Tốt nghiệp và trưởng thành từ HKDN",
-      testimonial: "MSC Center không chỉ dạy kiến thức mà còn giúp tôi xây dựng network chuyên nghiệp.",
+      achievement: "Tốt nghiệp và trưởng thành từ HKDN"
     },
     {
       id: 4,
@@ -43,8 +40,7 @@ const MSCersSection = () => {
       position: "Nhân sự Marketing",
       company: "MSC",
       avatar: "/MSCers/NNTH.webp",
-      achievement: "Tốt nghiệp và trưởng thành từ HKDN",
-      testimonial: "Chương trình đào tạo tại MSC rất thực tế và ứng dụng được ngay vào công việc.",
+      achievement: "Tốt nghiệp và trưởng thành từ HKDN"
     },
     {
       id: 5,
@@ -52,8 +48,7 @@ const MSCersSection = () => {
       position: "Nhân sự Marketing",
       company: "MSC",
       avatar: "/MSCers/PNTT.webp",
-      achievement: "Tốt nghiệp khóa Financial Management 2022",
-      testimonial: "MSC đã trang bị cho tôi nền tảng vững chắc để phát triển sự nghiệp trong lĩnh vực tài chính.",
+      achievement: "Tốt nghiệp khóa Financial Management 2022"
     },
     {
       id: 6,
@@ -61,8 +56,7 @@ const MSCersSection = () => {
       position: "Thư ký dự án",
       company: "MSC ",
       avatar: "/MSCers/THMT.webp",
-      achievement: "Học viên xuất sắc khóa Design Thinking 2023",
-      testimonial: "Khóa học Design Thinking tại MSC đã mở ra góc nhìn mới về thiết kế và trải nghiệm người dùng.",
+      achievement: "Học viên xuất sắc khóa Design Thinking 2023"
     },
     {
       id: 7,
@@ -70,8 +64,7 @@ const MSCersSection = () => {
       position: "Nhân sự Marketing",
       company: "Google Vietnam",
       avatar: "/MSCers/HNQ.webp",
-      achievement: "Cựu học viên khóa Tech Leadership 2022",
-      testimonial: "MSC Center đã giúp tôi phát triển từ một developer thành tech leader tự tin.",
+      achievement: "Cựu học viên khóa Tech Leadership 2022"
     },
     {
       id: 8,
@@ -79,8 +72,7 @@ const MSCersSection = () => {
       position: "Nhân sự Marketing",
       company: "MSC",
       avatar: "/MSCers/PBH.webp",
-      achievement: "Cựu học viên khóa Tech Leadership 2022",
-      testimonial: "MSC Center đã giúp tôi phát triển từ một developer thành tech leader tự tin.",
+      achievement: "Cựu học viên khóa Tech Leadership 2022"
     },
   ]
 
@@ -113,10 +105,10 @@ const MSCersSection = () => {
         >
           <div className="flex items-center justify-center mb-6">
             <Award className="h-8 w-8 text-teal-600 mr-3" />
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white font-serif">MSCers Members</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white font-serif">ĐỘI NGŨ MSCERS</h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-4">
-            Những học viên xuất sắc và trưởng thành từ MSC
+            Những MSCers ưu tú và trưởng thành từ MSC Center
           </p>
           <div className="flex items-center justify-center space-x-2 text-teal-600">
             <Star className="h-5 w-5 fill-current" />

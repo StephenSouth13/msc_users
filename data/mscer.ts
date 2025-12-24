@@ -30,7 +30,7 @@ export const mscersData: MSCerDetail[] = [
     position: "GIÁM ĐỐC MSC",
     avatar: "/MSCers/PHMK.webp",
     achievement: "Nhà sáng lập đa ngành, Giảng viên & Chuyên gia tư vấn chiến lược",
-    testimonial: "Kiến thức và kỹ năng được hệ thống hóa tại các trung tâm đào tạo đã trở thành nền tảng vững chắc, giúp tôi tự tin sáng lập và điều hành hiệu quả nhiều doanh nghiệp. Đây là nơi cung cấp tư duy chiến lược để biến ý tưởng thành hiện thực.",
+    testimonial: "",
     graduationYear: "2022",
     promotion: "Từ Trưởng phòng Marketing → Giám đốc → Nhà sáng lập & Viện phó",
     socialImpact: "Sáng lập và vận hành 3+ công ty trong lĩnh vực tư vấn, công nghệ và nông nghiệp. Giảng dạy và định hướng cho hàng ngàn sinh viên tại Đại học UEF.",

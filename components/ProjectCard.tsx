@@ -42,7 +42,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         
         <div className="mt-auto">
           <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
-            Chuyên gia phụ trách:
+            Mentoring & Coaching:
           </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {Array.isArray(project.mentors) && project.mentors.length > 0 ? (
