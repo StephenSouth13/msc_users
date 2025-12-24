@@ -96,7 +96,7 @@ export interface Project {
   detailproject?: string // New field for detailed project content (markdown support)
   image?: string
   technologies?: string[]
-  mentors?: any[]
+  mentors?: string[]
   status?: 'ongoing' | 'completed' | 'planning'
   slug?: string
   category?: string
@@ -161,7 +161,30 @@ export const api = {
         throw error
       }
       
-      return data || []
+      // Safely parse highlights for each program
+      const processedData = (data || []).map(program => {
+        let highlightsArray: string[] = [];
+        if (typeof program.highlights === 'string') {
+          try {
+            const parsed = JSON.parse(program.highlights);
+            if (Array.isArray(parsed)) {
+              highlightsArray = parsed;
+            }
+          } catch (e) {
+            // It's a string but not valid JSON, so we leave it as an empty array.
+            console.warn('Could not parse highlights string:', program.highlights);
+          }
+        } else if (Array.isArray(program.highlights)) {
+          highlightsArray = program.highlights;
+        }
+        return {
+          ...program,
+          highlights: highlightsArray,
+        };
+      });
+
+      return processedData;
+
     } catch (error) {
       console.error('❌ Error fetching programs:', error)
       return []
@@ -209,7 +232,6 @@ export const api = {
     }
   },
 
-  // Get single project by slug
   getProjectBySlug: async (slug: string): Promise<Project | null> => {
     try {
       const supabase = createClient()
@@ -230,6 +252,29 @@ export const api = {
     } catch (error) {
       console.error('❌ Error fetching project by slug:', error)
       return null
+    }
+  },
+
+  createProject: async (projectData: Partial<Project>): Promise<Project> => {
+    try {
+      const response = await fetch(`/api/projects`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(projectData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create project');
+      }
+
+      const { data } = await response.json();
+      return data;
+    } catch (error) {
+      console.error('❌ Error creating project:', error);
+      throw error;
     }
   },
 

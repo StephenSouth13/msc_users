@@ -47,10 +47,10 @@ const ProjectsSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">
-            Dự án đã triển khai
+          DỰ ÁN ĐÃ TRIỂN KHAI
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Khám phá các dự án đào tạo và phát triển kỹ năng chuyên nghiệp mà MSC Center đã và đang triển khai.
+            Các dự án mà MSC Center đã và đang triển khai.
           </p>
         </motion.div>
 

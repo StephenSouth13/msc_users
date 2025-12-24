@@ -30,9 +30,9 @@ export default function MSCerPage() {
   }, [])
 
   const successStats = [
-    { label: "MSCer thành công", value: "5,000+", icon: Users },
-    { label: "Doanh nghiệp đối tác", value: "100+", icon: Award },
-    { label: "Câu chuyện truyền cảm hứng", value: "Hàng trăm", icon: Star },
+    { label: "MSCers trưởng thành từ MSC ", value: "5,000+", icon: Users },
+    { label: "Sự tham gia từ các trường Đại học và Cao đẳng", value: "100+", icon: Award },
+    { label: "Doanh nghiệp đối tác", value: "200+", icon: Star },
   ]
 
   const getTestimonial = (mscer: MSCer) => {
@@ -56,9 +56,9 @@ export default function MSCerPage() {
             <div className="inline-block bg-white/10 p-4 rounded-full mb-6">
               <Users className="h-12 w-12 text-white" />
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">Cộng đồng MSCer</h1>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">ĐỘI NGŨ MSCERS</h1>
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-              Nơi hội tụ những câu chuyện thành công, những gương mặt ưu tú đã trưởng thành từ các chương trình đào tạo của MSC Center.
+              Những gương mặt ưu tú đã trưởng thành từ MSC Center.
             </p>
           </motion.div>
         </div>
@@ -98,9 +98,9 @@ export default function MSCerPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">Câu Chuyện Thành Công</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">ĐỘI NGŨ MSCERS</h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Những MSCer tiêu biểu với hành trình phát triển sự nghiệp ấn tượng sau khi hoàn thành các chương trình đào tạo.
+              Những MSCers ưu tú và trưởng thành từ MSC Center.
             </p>
           </motion.div>
 

@@ -113,9 +113,9 @@ export default function MentorsPage() {
             <div className="inline-block bg-white/10 p-4 rounded-full mb-6">
               <Users className="h-12 w-12 text-white" />
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">Ban Giảng Huấn </h1>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">BAN GIẢNG HUẤN </h1>
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-              Gặp gỡ đội ngũ chuyên gia, những người thầy tâm huyết sẽ đồng hành và dẫn dắt bạn trên hành trình chinh phục những đỉnh cao mới.
+              Đội ngũ Ban giảng huấn Mentoring & Coaching của MSC Center .
             </p>
           </motion.div>
         </div>
@@ -287,25 +287,12 @@ export default function MentorsPage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">Sẵn sàng nâng tầm sự nghiệp?</h2> {/* Tiêu đề CTA */}
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif"></h2> {/* Tiêu đề CTA */}
               <p className="text-xl text-gray-600 mb-10 max-w-3xl mx-auto dark:text-gray-300"> {/* Mô tả CTA */}
-                Hãy để đội ngũ chuyên gia của MSC Center đồng hành cùng bạn. Khám phá các khóa học phù hợp hoặc liên hệ để được tư vấn trực tiếp.
+                
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/dao-tao">
-                    <Button size="lg" className="btn-primary text-lg px-10 py-6">
-                      Khám phá các khóa học
-                    </Button>
-                </Link>
-                <Link href="/lien-he">
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    className="text-lg px-10 py-6 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700" // Nút outline CTA
-                  >
-                    Liên hệ tư vấn
-                  </Button>
-                </Link>
+                
               </div>
            </motion.div>
         </div>

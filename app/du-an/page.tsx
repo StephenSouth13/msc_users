@@ -99,7 +99,7 @@ export default function ProjectsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
             >
-              Dự án Đã Triển Khai
+              DỰ ÁN ĐÃ TRIỂN KHAI
             </motion.h1>
             <motion.p 
               className="text-xl text-blue-100 mb-8 leading-relaxed"
@@ -107,7 +107,7 @@ export default function ProjectsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4 }}
             >
-              Khám phá các dự án đào tạo và phát triển thực tế mà MSC Center đã triển khai, mang lại giá trị bền vững cho đối tác và học viên.
+              Các dự án Mentoring & Coaching thực tế mà MSC Center đã triển khai.
             </motion.p>
           </div>
         </div>
@@ -147,9 +147,9 @@ export default function ProjectsPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">Các Dự Án Nổi Bật</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">CÁC DỰ ÁN NỔI BẬT</h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Từ các tập đoàn lớn đến những doanh nghiệp SMEs, mỗi dự án là một câu chuyện thành công.
+              Từ các tập đoàn lớn đến đại học và cao đẳng, mỗi dự án là một câu chuyện thành công.
             </p>
           </motion.div>
 
@@ -184,7 +184,7 @@ export default function ProjectsPage() {
                       <p className="text-gray-600 dark:text-gray-300 mb-6 flex-grow">{project.description}</p> {/* Chữ mô tả */}
                       
                       <div className="mt-auto">
-                          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Chuyên gia phụ trách:</p> {/* Chữ label */}
+                          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Mentoring & Coaching:</p> {/* Chữ label */}
                           <div className="flex items-center space-x-2">
                             {Array.isArray(project.mentors) && project.mentors.map((mentor: any, index: number) => (
                                  <div key={index} className="flex items-center space-x-2">
@@ -228,7 +228,7 @@ export default function ProjectsPage() {
               </p>
               <Link href="/lien-he">
                   <Button size="lg" className="btn-primary text-lg px-10 py-6">
-                    Tư vấn giải pháp
+                    Liên hệ ngay
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
               </Link>
