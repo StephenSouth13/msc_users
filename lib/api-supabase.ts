@@ -1,3 +1,4 @@
+
 'use client'
 
 import { createBrowserClient } from '@supabase/ssr'
@@ -44,6 +45,22 @@ export function createClient() {
 
   return createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 }
+
+// Helper function to safely parse JSON array fields
+const safeParseArray = (field: any): string[] => {
+  if (Array.isArray(field)) {
+    return field;
+  }
+  if (typeof field === 'string') {
+    try {
+      const parsed = JSON.parse(field);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return []; // Return empty array if parsing fails
+    }
+  }
+  return []; // Return empty array for any other type
+};
 
 // Types exports - Simple client types
 export interface UserData {
@@ -162,26 +179,10 @@ export const api = {
       }
       
       // Safely parse highlights for each program
-      const processedData = (data || []).map(program => {
-        let highlightsArray: string[] = [];
-        if (typeof program.highlights === 'string') {
-          try {
-            const parsed = JSON.parse(program.highlights);
-            if (Array.isArray(parsed)) {
-              highlightsArray = parsed;
-            }
-          } catch (e) {
-            // It's a string but not valid JSON, so we leave it as an empty array.
-            console.warn('Could not parse highlights string:', program.highlights);
-          }
-        } else if (Array.isArray(program.highlights)) {
-          highlightsArray = program.highlights;
-        }
-        return {
-          ...program,
-          highlights: highlightsArray,
-        };
-      });
+      const processedData = (data || []).map(program => ({
+        ...program,
+        highlights: safeParseArray(program.highlights),
+      }));
 
       return processedData;
 
@@ -203,7 +204,15 @@ export const api = {
         console.error('❌ Supabase error:', error)
         throw error
       }
-      return data || []
+      
+      // Safely parse mentors and technologies fields
+      const processedData = (data || []).map(project => ({
+        ...project,
+        mentors: safeParseArray(project.mentors),
+        technologies: safeParseArray(project.technologies),
+      }));
+
+      return processedData;
     } catch (error) {
       console.error('❌ Error fetching projects:', error)
       return []
@@ -225,7 +234,15 @@ export const api = {
         }
         throw error;
       }
-      return data;
+      
+      if (!data) return null;
+
+      // Safely parse mentors and technologies
+      return {
+        ...data,
+        mentors: safeParseArray(data.mentors),
+        technologies: safeParseArray(data.technologies),
+      };
     } catch (error) {
       console.error('❌ Error fetching project by id:', error);
       return null;
@@ -247,8 +264,15 @@ export const api = {
         }
         throw error
       }
-      
-      return data
+
+      if (!data) return null;
+
+      // Safely parse mentors and technologies
+      return {
+        ...data,
+        mentors: safeParseArray(data.mentors),
+        technologies: safeParseArray(data.technologies),
+      };
     } catch (error) {
       console.error('❌ Error fetching project by slug:', error)
       return null

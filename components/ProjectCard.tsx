@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Users, Award } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -40,32 +40,23 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {project.description}
         </p>
         
-        <div className="mt-auto">
-          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
-            Mentoring & Coaching:
-          </p>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            {Array.isArray(project.mentors) && project.mentors.length > 0 ? (
-              project.mentors.map((mentor, index) => (
-                <div key={`${mentor.name || mentor.id || index}`} className="flex items-center space-x-2">
-                  <Image 
-                    src={mentor.avatar || '/placeholder-user.jpg'} 
-                    alt={mentor.name || 'Mentor'} 
-                    width={28} 
-                    height={28} 
-                    className="rounded-full border-2 border-white"
-                  />
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                    {mentor.name || 'Chuyên gia'}
-                  </span>
-                </div>
-              ))
-            ) : (
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Đang cập nhật thông tin mentor
-              </span>
-            )}
-          </div>
+        <div className="mt-auto space-y-3">
+            <div className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-200">
+                <Users className="h-4 w-4 mr-2 flex-shrink-0" />
+                <span>Người hướng dẫn:</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+                {Array.isArray(project.mentors) && project.mentors.length > 0 && project.mentors[0] !== '' ? (
+                    project.mentors.map((mentorName: string, index: number) => (
+                        <Badge key={index} variant="outline" className="font-normal bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-200">
+                            <Award className="h-3 w-3 mr-1.5" />
+                            {mentorName}
+                        </Badge>
+                    ))
+                ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">Chưa có thông tin</p>
+                )}
+            </div>
         </div>
         
         <Link href={`/du-an/${project.slug || project.id}`} className="mt-6">
