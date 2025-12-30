@@ -5,13 +5,16 @@ export interface Project {
   detailproject?: string 
   image?: string
   technologies?: string[]
-  // Cập nhật kiểu dữ liệu cho mentors
+  // CẬP NHẬT ĐOẠN NÀY
   mentors?: {
     id: string;
     full_name: string;
     avatar_url: string;
+    slug: string;   // Thêm dòng này
+    title?: string; // Thêm dòng này
   }[]
   status?: 'ongoing' | 'completed' | 'planning'
   slug?: string
   category?: string
+  featured?: boolean // Thêm nếu bạn dùng logic lọc dự án tiêu biểu
 }

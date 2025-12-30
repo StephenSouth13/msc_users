@@ -96,15 +96,18 @@ export interface Project {
   detailproject?: string 
   image?: string
   technologies?: string[]
-  // Cập nhật kiểu dữ liệu cho mentors
+  // CẬP NHẬT ĐOẠN NÀY
   mentors?: {
     id: string;
     full_name: string;
     avatar_url: string;
+    slug: string;   // Thêm dòng này
+    title?: string; // Thêm dòng này
   }[]
   status?: 'ongoing' | 'completed' | 'planning'
   slug?: string
   category?: string
+  featured?: boolean // Thêm nếu bạn dùng logic lọc dự án tiêu biểu
 }
 
 export interface BlogPost {
@@ -192,7 +195,7 @@ export const api = {
       // 2. Lấy toàn bộ danh sách mentors để map thủ công (Tối ưu hơn fetch từng cái)
       const { data: mentorsList, error: mentError } = await supabase
         .from('mentors')
-        .select('id, full_name, avatar_url, slug');
+        .select('id, full_name, avatar_url, slug, title');
 
       if (mentError) throw mentError;
 
@@ -201,9 +204,9 @@ export const api = {
         const projectMentorIds = project.mentor_ids || [];
         
         // Tìm thông tin chi tiết của các mentor dựa trên mảng ID
-        const matchedMentors = (mentorsList || []).filter(m => 
-          projectMentorIds.includes(m.id)
-        );
+        const matchedMentors = (mentorsList || []).filter((m: { id: string; full_name: string; avatar_url: string; slug: string; title?: string }) => 
+  (project.mentor_ids || []).includes(m.id)
+)
 
         return {
           ...project,
@@ -392,31 +395,50 @@ export const api = {
   },
 
   // Get single project by slug
+ // Get single project by slug (Kèm thông tin chi tiết Mentor)
   getProjectBySlug: async (slug: string): Promise<Project | null> => {
     try {
       console.log('🔍 Starting getProjectBySlug API call for:', slug)
       
       const supabase = createClient()
-      const { data, error } = await supabase
+      
+      // 1. Lấy dữ liệu dự án từ bảng 'projects'
+      const { data: project, error } = await supabase
         .from('projects')
         .select('*')
         .eq('slug', slug)
         .single()
       
-      console.log('🔍 Project by slug query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      
       if (error) {
         console.error('❌ Supabase error:', error)
-        if (error.code === 'PGRST116') {
-          return null // Project not found
-        }
+        if (error.code === 'PGRST116') return null // Không tìm thấy dự án
         throw error
       }
+
+      // 2. Lấy thông tin chi tiết Mentors dựa trên mảng mentor_ids của dự án
+      const mentorIds = project.mentor_ids || []
       
-      console.log('✅ Project fetched successfully:', data.title)
-      return data
+      if (mentorIds.length > 0) {
+        const { data: mentorsData, error: mentorError } = await supabase
+          .from('mentors')
+          .select('id, full_name, avatar_url, slug, title')
+          .in('id', mentorIds) // Lọc những mentor có ID nằm trong mảng mentor_ids
+
+        if (mentorError) {
+          console.error('⚠️ Error fetching mentors for project:', mentorError)
+          project.mentors = []
+        } else {
+          project.mentors = mentorsData || []
+        }
+      } else {
+        project.mentors = []
+      }
+      
+      console.log('✅ Project with Mentors fetched successfully:', project.title)
+      
+      // Trả về project đã được gán thêm mảng mentors chi tiết
+      return project as Project
+      
     } catch (error) {
       console.error('❌ Error fetching project by slug:', error)
       return null
