@@ -93,10 +93,15 @@ export interface Project {
   id: string
   title: string
   description: string
-  detailproject?: string // New field for detailed project content (markdown support)
+  detailproject?: string 
   image?: string
   technologies?: string[]
-  mentors?: any[]
+  // Cập nhật kiểu dữ liệu cho mentors
+  mentors?: {
+    id: string;
+    full_name: string;
+    avatar_url: string;
+  }[]
   status?: 'ongoing' | 'completed' | 'planning'
   slug?: string
   category?: string
@@ -171,32 +176,48 @@ export const api = {
   },
 
   // Projects
+
   getProjects: async (): Promise<Project[]> => {
     try {
-      console.log('🔍 Starting getProjects API call...')
+      const supabase = createClient();
       
-      const supabase = createClient()
-      const { data, error } = await supabase
+      // 1. Lấy danh sách dự án
+      const { data: projectsData, error: projError } = await supabase
         .from('projects')
         .select('*')
-      
-      console.log('🔍 Projects query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      console.log('🔍 Data length:', data?.length || 0)
-      
-      if (error) {
-        console.error('❌ Supabase error:', error)
-        throw error
-      }
-      
-      console.log('✅ Projects fetched successfully:', data?.length || 0, 'records')
-      return data || []
+        .order('created_at', { ascending: false });
+
+      if (projError) throw projError;
+
+      // 2. Lấy toàn bộ danh sách mentors để map thủ công (Tối ưu hơn fetch từng cái)
+      const { data: mentorsList, error: mentError } = await supabase
+        .from('mentors')
+        .select('id, full_name, avatar_url, slug');
+
+      if (mentError) throw mentError;
+
+      // 3. Map Mentor vào từng Project
+      const formattedProjects: Project[] = (projectsData || []).map((project: any) => {
+        const projectMentorIds = project.mentor_ids || [];
+        
+        // Tìm thông tin chi tiết của các mentor dựa trên mảng ID
+        const matchedMentors = (mentorsList || []).filter(m => 
+          projectMentorIds.includes(m.id)
+        );
+
+        return {
+          ...project,
+          mentors: matchedMentors // Gán mảng object mentor vào đây
+        };
+      });
+
+      return formattedProjects;
     } catch (error) {
-      console.error('❌ Error fetching projects:', error)
-      return []
+      console.error('❌ Error fetching projects:', error);
+      return [];
     }
   },
+  
 
   // Blog posts
   getBlogPosts: async (): Promise<BlogPost[]> => {

@@ -69,7 +69,7 @@ const Footer = () => {
                         </Link>
 
                         <p className="text-white/80 mb-6 leading-relaxed max-w-md">
-                            MSC Center - Trung tâm đào tạo và phát triển kỹ năng chuyên nghiệp hàng đầu Việt Nam cho người đi làm và sinh viên.
+                            MSC Center - Trung tâm Mentoring & Coaching tại Việt Nam
                         </p>
 
                         <div className="mt-6 bg-white/10 p-1 rounded-lg backdrop-blur-sm border border-white/20" style={{ maxWidth: 320 }}>
