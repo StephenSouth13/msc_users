@@ -111,21 +111,25 @@ export interface Project {
 }
 
 export interface BlogPost {
-  id: string
-  title: string
-  content?: string
-  excerpt?: string
-  context?: string
-  image?: string
-  author?: string
-  author_avatar?: string
-  published_at?: string
-  publish_date?: string
-  read_time?: string
-  created_at?: string
-  tags?: string[]
-  category?: string
-  slug?: string
+  id: string;
+  title: string;
+  content: string;
+  excerpt?: string;
+  image?: string;
+  category?: string;
+  slug: string;
+  publish_date: string; // Dùng thống nhất trường này
+  read_time?: string;
+  views?: number;
+  likes?: number;
+  // Cấu trúc đa tác giả xịn xò
+  authors: {
+    full_name: string;
+    avatar_url: string;
+    slug: string;
+    title?: string;
+  }[];
+  tags?: string[];
 }
 
 // Simple API for client-side operations
@@ -222,57 +226,41 @@ export const api = {
   },
   
 
-  // Blog posts
+  // --- PHẦN BLOG POSTS NÂNG CẤP (ĐA TÁC GIẢ & TỐI ƯU) ---
+
+  // 1. Lấy tất cả bài viết kèm thông tin đa tác giả
   getBlogPosts: async (): Promise<BlogPost[]> => {
     try {
       console.log('🔍 Starting getBlogPosts API call...')
-      
       const supabase = createClient()
       const { data, error } = await supabase
-        .from('allblogposts')
+        .from('allblogposts') 
         .select('*')
         .order('publish_date', { ascending: false })
       
-      console.log('🔍 Blog posts query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      console.log('🔍 Data length:', data?.length || 0)
+      if (error) throw error
       
-      if (error) {
-        console.error('❌ Supabase error:', error)
-        throw error
-      }
-      
-      // Transform database data to match BlogPost interface
       const blogPosts: BlogPost[] = (data || []).map((post: any) => ({
+        ...post,
         id: post.id.toString(),
-        title: post.title,
-        content: post.content || post.details_blog, // Use content field if available, fallback to details_blog
-        excerpt: post.excerpt,
-        image: post.image,
-        author: post.author,
-        author_avatar: post.author_avatar,
-        published_at: post.publish_date,
-        publish_date: post.publish_date,
-        read_time: post.read_time,
-        category: post.category,
-        slug: post.slug,
-        tags: [] // Database doesn't have tags field, so empty array
+        content: post.content || post.details_blog, // Fallback nếu database đổi tên cột
+        authors: post.authors_details || [], // Lấy mảng tác giả từ SQL View
+        publish_date: post.publish_date || post.created_at,
+        tags: post.tags || []
       }))
       
-      console.log('✅ Blog posts fetched successfully:', blogPosts.length, 'records')
+      console.log('✅ Blog posts fetched:', blogPosts.length)
       return blogPosts
     } catch (error) {
-      console.error('❌ Error fetching blog posts:', error)
+      console.error('❌ Error getBlogPosts:', error)
       return []
     }
   },
 
-  // Get single blog post by slug
+  // 2. Lấy chi tiết 1 bài viết theo Slug
   getBlogPostBySlug: async (slug: string): Promise<BlogPost | null> => {
     try {
-      console.log('🔍 Starting getBlogPostBySlug API call for:', slug)
-      
+      console.log('🔍 Fetching blog post by slug:', slug)
       const supabase = createClient()
       const { data, error } = await supabase
         .from('allblogposts')
@@ -280,49 +268,28 @@ export const api = {
         .eq('slug', slug)
         .single()
       
-      console.log('🔍 Blog post by slug query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      
       if (error) {
-        console.error('❌ Supabase error:', error)
-        if (error.code === 'PGRST116') {
-          return null // Post not found
-        }
+        if (error.code === 'PGRST116') return null
         throw error
       }
       
-      // Transform database data to match BlogPost interface
-      const blogPost: BlogPost = {
+      return {
+        ...data,
         id: data.id.toString(),
-        title: data.title,
-        content: data.content || data.details_blog, // Use content field if available, fallback to details_blog
-        excerpt: data.excerpt,
-        context: data.context,
-        image: data.image,
-        author: data.author,
-        author_avatar: data.author_avatar,
-        published_at: data.publish_date,
-        publish_date: data.publish_date,
-        read_time: data.read_time,
-        category: data.category,
-        slug: data.slug,
-        tags: []
-      }
-      
-      console.log('✅ Blog post fetched successfully:', blogPost.title)
-      return blogPost
+        content: data.content || data.details_blog,
+        authors: data.authors_details || [],
+        publish_date: data.publish_date || data.created_at,
+        tags: data.tags || []
+      } as BlogPost
     } catch (error) {
-      console.error('❌ Error fetching blog post by slug:', error)
+      console.error('❌ Error getBlogPostBySlug:', error)
       return null
     }
   },
 
-  // Get blog posts by category
+  // 3. Lấy bài viết theo danh mục (Sửa lỗi lọc đa tác giả)
   getBlogPostsByCategory: async (category: string): Promise<BlogPost[]> => {
     try {
-      console.log('🔍 Starting getBlogPostsByCategory API call for:', category)
-      
       const supabase = createClient()
       const { data, error } = await supabase
         .from('allblogposts')
@@ -330,66 +297,37 @@ export const api = {
         .ilike('category', `%${category}%`)
         .order('publish_date', { ascending: false })
       
-      console.log('🔍 Blog posts by category query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data length:', data?.length || 0)
+      if (error) throw error
       
-      if (error) {
-        console.error('❌ Supabase error:', error)
-        throw error
-      }
-      
-      // Transform database data to match BlogPost interface
-      const blogPosts: BlogPost[] = (data || []).map((post: any) => ({
-        id: post.id.toString(),
-        title: post.title,
-        content: post.content || post.details_blog, // Use content field if available, fallback to details_blog
-        excerpt: post.excerpt,
-        image: post.image,
-        author: post.author,
-        author_avatar: post.author_avatar,
-        published_at: post.publish_date,
-        publish_date: post.publish_date,
-        read_time: post.read_time,
-        category: post.category,
-        slug: post.slug,
-        tags: []
+      return (data || []).map((post: any) => ({
+  ...post,
+  id: post.id.toString(),
+  content: post.content || post.details_blog,
+  authors: post.authors_details || [],
+  // Gán giá trị published_at (từ DB) vào publish_date (cho FE dùng)
+  publish_date: post.published_at, 
+  tags: post.tags || []
       }))
-      
-      console.log('✅ Blog posts by category fetched successfully:', blogPosts.length, 'records')
-      return blogPosts
     } catch (error) {
-      console.error('❌ Error fetching blog posts by category:', error)
+      console.error('❌ Error getBlogPostsByCategory:', error)
       return []
     }
   },
 
-  // Get top posts from view
+  // 4. Lấy Top bài viết xem nhiều (Dùng View top_posts hoặc allblogposts)
   getTopPosts: async (): Promise<any[]> => {
     try {
-      console.log('🔍 Starting getTopPosts API call...')
-      
       const supabase = createClient()
       const { data, error } = await supabase
-        .from('top_posts')
-        .select('*')
+        .from('allblogposts') // Dùng view allblogposts để đồng bộ dữ liệu
+        .select('id, title, slug, image, views, category, publish_date')
         .order('views', { ascending: false })
         .limit(5)
       
-      console.log('🔍 Top posts query executed')
-      console.log('🔍 Error:', error)
-      console.log('🔍 Data:', data)
-      console.log('🔍 Data length:', data?.length || 0)
-      
-      if (error) {
-        console.error('❌ Supabase error:', error)
-        throw error
-      }
-      
-      console.log('✅ Top posts fetched successfully:', data?.length || 0, 'records')
+      if (error) throw error
       return data || []
     } catch (error) {
-      console.error('❌ Error fetching top posts:', error)
+      console.error('❌ Error getTopPosts:', error)
       return []
     }
   },
