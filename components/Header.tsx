@@ -63,7 +63,7 @@ const Header = () => {
     { href: "/mentors", label: t("nav.mentors") },
     { href: "/mscer", label: t("nav.mscer") },
     { href: "/dong-hanh", label: t("nav.partners") },
-    { href: "/chia-se", label: t("nav.blog") },
+    { href: "/tin-tuc", label: "Tin tức" },
     { href: "/lien-he", label: t("nav.contact") },
   ]
 
