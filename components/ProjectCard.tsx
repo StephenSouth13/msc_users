@@ -57,6 +57,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     <p className="text-sm text-gray-500 dark:text-gray-400 italic">Chưa có thông tin</p>
                 )}
             </div>
+
         </div>
         
         <Link href={`/du-an/${project.slug || project.id}`} className="mt-6">

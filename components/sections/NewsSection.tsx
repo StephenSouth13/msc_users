@@ -10,6 +10,7 @@ import BlogCard from "../BlogCard"
 const NewsSection = () => {
   const { t } = useLanguage()
 
+
   const blogPosts = [
     {
       id: "1",
@@ -60,6 +61,7 @@ const NewsSection = () => {
   return (
     <section className="py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container">
+
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -67,8 +69,10 @@ const NewsSection = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
+
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">
             TIN TỨC & SỰ KIỆN MỚI NHẤT
+
 
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -90,6 +94,7 @@ const NewsSection = () => {
           ))}
         </div>
 
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -97,10 +102,12 @@ const NewsSection = () => {
           viewport={{ once: true }}
           className="text-center"
         >
-          <Link href="/chia-se">
-            <Button size="lg" className="btn-primary">
-              Xem tất cả tin tức
-              <ArrowRight className="ml-2 h-5 w-5" />
+
+          <Link href="/tin-tuc">
+            <Button size="lg" className="group rounded-2xl bg-slate-900 hover:bg-blue-600 text-white font-black px-12 h-16 transition-all duration-300 shadow-2xl shadow-blue-200 dark:shadow-none hover:scale-105 uppercase text-xs tracking-widest">
+              Khám phá tất cả tin tức
+              <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+
             </Button>
           </Link>
         </motion.div>
