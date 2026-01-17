@@ -68,7 +68,7 @@ const NewsSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">
-            Tin tức & Chia sẻ
+            TIN TỨC & SỰ KIỆN MỚI NHẤT
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Cập nhật những thông tin mới nhất về đào tạo, phát triển kỹ năng và chia sẻ kinh nghiệm từ các chuyên gia
