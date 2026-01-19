@@ -42,10 +42,17 @@ const ProjectsSection = () => {
         {/* Tiêu đề Section */}
         <motion.div className="text-center mb-16" /* ... animation variants ... */>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">
+<<<<<<< HEAD
             Dự án tiêu biểu
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Khám phá các dự án đào tạo thực tế tiêu biểu nhất do MSC Center triển khai.
+=======
+          DỰ ÁN ĐÃ TRIỂN KHAI
+          </h2>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            Các dự án mà MSC Center đã và đang triển khai.
+>>>>>>> a05a58dc4d60f7219407f17c7066bf57b15f0e95
           </p>
         </motion.div>
 
@@ -81,5 +88,9 @@ const ProjectsSection = () => {
   )
 }
 
+<<<<<<< HEAD
 
 export default ProjectsSection;
+=======
+export default ProjectsSection;
+>>>>>>> a05a58dc4d60f7219407f17c7066bf57b15f0e95

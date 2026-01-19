@@ -22,58 +22,42 @@ const AboutPageClient = () => {
     {
       id: 1,
       src: "/gioi-thieu/4.webp",
-      title: "Buổi đào tạo Leadership Skills",
-      description: "Khóa học phát triển kỹ năng lãnh đạo cho các nhà quản lý trẻ",
-      category: "Training",
+      
     },
     {
       id: 2,
       src: "/gioi-thieu/8.webp",
-      title: "Workshop Team Building",
-      description: "Hoạt động xây dựng tinh thần đồng đội và gắn kết nhóm",
-      category: "Workshop",
+      
     },
     {
       id: 3,
       src: "/gioi-thieu/6.webp",
-      title: "Hội thảo Digital Transformation",
-      description: "Chia sẻ về xu hướng chuyển đổi số trong doanh nghiệp",
-      category: "Seminar",
+      
     },
     {
       id: 4,
       src: "/gioi-thieu/19.webp",
-      title: "Lễ tốt nghiệp khóa Project Management",
-      description: "Trao chứng chỉ cho học viên hoàn thành khóa học",
-      category: "Event",
+      
     },
     {
       id: 5,
       src: "/gioi-thieu/9.webp",
-      title: "Phiên Mentoring 1-on-1",
-      description: "Buổi coaching cá nhân giữa mentor và học viên",
-      category: "Mentoring",
+      
     },
     {
       id: 6,
       src: "/gioi-thieu/1.webp",
-      title: "Hội nghị thường niên MSC",
-      description: "Sự kiện tổng kết và định hướng phát triển",
-      category: "Conference",
+     
     },
     {
       id: 7,
       src: "/gioi-thieu/20.webp",
-      title: "Innovation Lab Session",
-      description: "Phòng thí nghiệm sáng tạo và phát triển ý tưởng",
-      category: "Innovation",
+     
     },
     {
       id: 8,
       src: "/gioi-thieu/21.webp",
-      title: "Networking Event",
-      description: "Sự kiện kết nối và giao lưu giữa các học viên",
-      category: "Networking",
+     
     },
   ]
 
@@ -141,10 +125,10 @@ const AboutPageClient = () => {
             className="text-center mb-16"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white font-serif">
-              Giới thiệu MSC Center
+              GIỚI THIỆU
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Trung tâm đào tạo và phát triển kỹ năng chuyên nghiệp hàng đầu Việt Nam, cam kết mang đến những chương trình học chất lượng cao và trải nghiệm học tập tuyệt vời.
+              Trung tâm Mentoring & Coaching đầu tiên tại Việt Nam.
             </p>
           </motion.div>
         </div>
@@ -283,7 +267,7 @@ const AboutPageClient = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">
-              Thư viện hình ảnh
+              THƯ VIỆN HÌNH ẢNH
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Những khoảnh khắc đáng nhớ trong hành trình phát triển và đào tạo tại MSC Center

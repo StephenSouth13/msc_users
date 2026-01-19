@@ -29,6 +29,8 @@ export default function ProjectDetailPage({ params }: Props) {
     const fetchData = async () => {
       try {
         setLoading(true)
+        
+        // Fetch current project
         const currentProject = await api.getProjectBySlug(params.slug)
         if (!currentProject) {
           notFound()
@@ -62,7 +64,9 @@ export default function ProjectDetailPage({ params }: Props) {
     )
   }
 
-  if (!project) notFound()
+  if (!project) {
+    notFound()
+  }
 
   const getStatusColor = (status?: string) => {
     switch (status) {
@@ -94,20 +98,28 @@ export default function ProjectDetailPage({ params }: Props) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-3 space-y-8">
-            <article className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl shadow-blue-900/5 overflow-hidden border border-gray-100 dark:border-gray-700">
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            <article className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
               {/* Hero Image */}
-              <div className="relative h-[450px]">
-                <Image src={project.image || "/placeholder.svg"} alt={project.title} fill className="object-cover" priority />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/20 to-transparent" />
-                <div className="absolute bottom-10 left-10 right-10">
-                  <div className="flex flex-wrap items-center gap-3 mb-6">
-                    <Badge className="bg-blue-600 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border-none">
-                      {project.category}
-                    </Badge>
-                    <Badge className={`${getStatusColor(project.status)} px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border-none`}>
-                      {getStatusText(project.status)}
-                    </Badge>
+              <div className="relative h-96">
+                <Image 
+                  src={project.image || "/placeholder.svg"} 
+                  alt={project.title} 
+                  fill 
+                  className="object-cover" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="absolute bottom-6 left-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    {project.category && (
+                      <Badge className="bg-blue-600 text-white">{project.category}</Badge>
+                    )}
+                    {project.status && (
+                      <Badge className={getStatusColor(project.status)}>
+                        {getStatusText(project.status)}
+                      </Badge>
+                    )}
                   </div>
                   <h1 className="text-4xl md:text-6xl font-black text-white leading-tight drop-shadow-2xl">
                     {project.title}
@@ -115,60 +127,42 @@ export default function ProjectDetailPage({ params }: Props) {
                 </div>
               </div>
 
-              <div className="p-10 space-y-12">
-                {/* Section Mô tả */}
-                <section>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400">
-                      <Calendar size={20} />
-                    </div>
-                    <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight">Tổng quan dự án</h2>
-                  </div>
-                  <div className="prose prose-blue dark:prose-invert max-w-none">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight, rehypeRaw]}>
+              {/* Project Content */}
+              <div className="p-8">
+                {/* Basic Description */}
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Mô tả dự án</h2>
+                  <div className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeHighlight, rehypeRaw]}
+                      components={{
+                        p: ({children}) => <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">{children}</p>,
+                        strong: ({children}) => <strong className="font-semibold text-gray-900 dark:text-white">{children}</strong>,
+                        ul: ({children}) => <ul className="list-disc list-inside mb-4 text-gray-700 dark:text-gray-300">{children}</ul>,
+                        li: ({children}) => <li className="mb-1">{children}</li>
+                      }}
+                    >
                       {project.description || ''}
                     </ReactMarkdown>
                   </div>
-                </section>
+                </div>
 
-                {/* Section Đội ngũ chuyên gia (ĐÃ FIX LỖI TYPE) */}
-                {project.mentors && project.mentors.length > 0 && (
-                  <section className="pt-10 border-t border-gray-100 dark:border-gray-700">
-                    <div className="flex items-center gap-3 mb-8">
-                      <div className="w-10 h-10 bg-purple-50 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400">
-                        <Award size={20} />
-                      </div>
-                      <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight">Đội ngũ chuyên gia</h2>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {project.mentors.map((mentor: any, index: number) => (
-                        <Link key={mentor.id || index} href={`/mentors/${mentor.slug}`}>
-                          <Card className="group hover:border-blue-500 transition-all duration-300 overflow-hidden border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md">
-                            <CardContent className="p-5 flex items-center gap-5">
-                              <Avatar className="w-16 h-16 border-2 border-white dark:border-gray-900 shadow-md group-hover:scale-110 transition-transform">
-                                <AvatarImage src={mentor.avatar_url} className="object-cover" />
-                                <AvatarFallback className="bg-blue-50 text-blue-600 font-bold uppercase">
-                                  {mentor.full_name?.substring(0, 2)}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
-                                  {mentor.full_name}
-                                </h3>
-                                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium uppercase tracking-wider text-[10px] mt-1">
-                                  {mentor.title || 'Chuyên gia phụ trách'}
-                                </p>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </Link>
+                {/* Technologies */}
+                {project.technologies && project.technologies.length > 0 && (
+                  <div className="mb-8">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Công nghệ sử dụng</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {project.technologies.map((tech, index) => (
+                        <Badge key={index} variant="outline" className="text-sm">
+                          {tech}
+                        </Badge>
                       ))}
                     </div>
                   </section>
                 )}
 
-                {/* Section Nội dung chi tiết */}
+                {/* Detailed Content with Full Markdown Support */}
                 {project.detailproject && (
                   <section className="pt-10 border-t border-gray-100 dark:border-gray-700">
                     <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight mb-8">Chi tiết triển khai</h2>
@@ -180,25 +174,108 @@ export default function ProjectDetailPage({ params }: Props) {
                         {project.detailproject}
                       </ReactMarkdown>
                     </div>
-                  </section>
+                  </div>
+                )}
+
+                {/* Team Section */}
+                {project.mentors && project.mentors.length > 0 && (
+                  <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Đội ngũ thực hiện</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {project.mentors.map((mentor, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="flex items-center space-x-4">
+                            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                              <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-900 dark:text-white">
+                                {typeof mentor === 'string' ? mentor : mentor.name || 'Thành viên'}
+                              </p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {typeof mentor === 'object' ? mentor.role || 'Developer' : 'Developer'}
+                              </p>
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
             </article>
+
+            {/* Related Projects */}
+            {relatedProjects.length > 0 && (
+              <div className="mt-12">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Dự án liên quan</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {relatedProjects.map((relatedProject) => (
+                    <Card key={relatedProject.id} className="hover:shadow-lg transition-shadow duration-300">
+                      <div className="relative">
+                        <Image
+                          src={relatedProject.image || "/placeholder.svg"}
+                          alt={relatedProject.title}
+                          width={400}
+                          height={200}
+                          className="w-full h-48 object-cover rounded-t-lg"
+                        />
+                        <div className="absolute top-4 right-4">
+                          {relatedProject.status && (
+                            <Badge className={getStatusColor(relatedProject.status)}>
+                              {getStatusText(relatedProject.status)}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                          {relatedProject.title}
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
+                          {relatedProject.description}
+                        </p>
+                        <Link href={`/du-an/${relatedProject.slug || relatedProject.id}`}>
+                          <Button variant="outline" size="sm" className="w-full">
+                            Xem chi tiết
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
-          <aside className="lg:col-span-1 space-y-6">
-            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 sticky top-24">
-              <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase tracking-widest mb-6">Thông tin bổ sung</h3>
-              <div className="space-y-6">
-                <div className="flex flex-col gap-1">
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Trạng thái</span>
-                  <Badge className={`${getStatusColor(project.status)} w-fit px-3 border-none font-bold`}>{getStatusText(project.status)}</Badge>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Lĩnh vực</span>
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">{project.category}</span>
-                </div>
+          <div className="lg:col-span-1">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sticky top-8">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Thông tin dự án</h3>
+              
+              <div className="space-y-4">
+                {project.status && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">Trạng thái:</span>
+                    <Badge className={getStatusColor(project.status)}>
+                      {getStatusText(project.status)}
+                    </Badge>
+                  </div>
+                )}
+                
+                {project.category && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Danh mục:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{project.category}</span>
+                  </div>
+                )}
+
+                {project.mentors && project.mentors.length > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Thành viên:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{project.mentors.length} người</span>
+                  </div>
+                )}
               </div>
 
               <div className="mt-10 space-y-3">

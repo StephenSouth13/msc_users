@@ -49,7 +49,7 @@ export default function PartnersPage() {
   ];
 
   const stats = [
-    { label: "Đối tác tin cậy", value: "30+", icon: Handshake },
+    { label: "Đối tác doanh nghiệp", value: "100+", icon: Handshake },
     { label: "Dự án hợp tác", value: "100+", icon: Award },
     { label: "Học viên được đào tạo", value: "5,000+", icon: Users },
   ];
@@ -79,9 +79,9 @@ export default function PartnersPage() {
             <div className="inline-block bg-white/10 p-4 rounded-full mb-6">
               <Handshake className="h-12 w-12 text-white" />
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">Đối tác & Đồng hành</h1>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">ĐỐI TÁC & ĐỒNG HÀNH</h1>
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-              Sức mạnh của MSC Center được tạo nên từ mạng lưới đối tác uy tín, cùng chung một tầm nhìn về phát triển giáo dục và nguồn nhân lực chất lượng cao.
+              MSC Center có mạng lưới đối tác từ các doanh nghiệp và các trường Đại học và Cao đẳng có cùng chung một tầm nhìn về phát triển giáo dục và nguồn nhân lực chất lượng cao.
             </p>
           </motion.div>
         </div>

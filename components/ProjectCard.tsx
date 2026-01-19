@@ -4,7 +4,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Users, Award } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -45,6 +45,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {project.description}
         </p>
         
+<<<<<<< HEAD
         {/* PHẦN ĐỘI NGŨ MENTOR - THIẾT KẾ XỊN ĐẸP */}
         <div className="mt-auto pt-5 border-t border-gray-100 dark:border-neutral-700">
           <p className="text-[10px] font-black uppercase text-blue-600 dark:text-blue-400 tracking-[0.15em] flex items-center gap-2 mb-3">
@@ -94,6 +95,26 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               <span className="text-[11px] text-gray-400 italic">Đang cập nhật chuyên gia...</span>
             )}
           </div>
+=======
+        <div className="mt-auto space-y-3">
+            <div className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-200">
+                <Users className="h-4 w-4 mr-2 flex-shrink-0" />
+                <span>Người hướng dẫn:</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+                {Array.isArray(project.mentors) && project.mentors.length > 0 && project.mentors[0] !== '' ? (
+                    project.mentors.map((mentorName: string, index: number) => (
+                        <Badge key={index} variant="outline" className="font-normal bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-200">
+                            <Award className="h-3 w-3 mr-1.5" />
+                            {mentorName}
+                        </Badge>
+                    ))
+                ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">Chưa có thông tin</p>
+                )}
+            </div>
+
+>>>>>>> a05a58dc4d60f7219407f17c7066bf57b15f0e95
         </div>
         
         {/* NÚT XEM CHI TIẾT */}
