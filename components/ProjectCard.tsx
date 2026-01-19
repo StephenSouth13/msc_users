@@ -4,7 +4,11 @@
 
 import Image from "next/image"
 import Link from "next/link"
+<<<<<<< HEAD
 import { ArrowRight, Users, Award } from "lucide-react"
+=======
+import { ArrowRight } from "lucide-react"
+>>>>>>> parent of 48b962a (up trang chia sẻ)
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -46,6 +50,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </p>
         
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 48b962a (up trang chia sẻ)
         {/* PHẦN ĐỘI NGŨ MENTOR - THIẾT KẾ XỊN ĐẸP */}
         <div className="mt-auto pt-5 border-t border-gray-100 dark:border-neutral-700">
           <p className="text-[10px] font-black uppercase text-blue-600 dark:text-blue-400 tracking-[0.15em] flex items-center gap-2 mb-3">

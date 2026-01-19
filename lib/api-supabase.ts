@@ -131,6 +131,7 @@ export interface Project {
   featured?: boolean // Thêm nếu bạn dùng logic lọc dự án tiêu biểu
 }
 
+<<<<<<< HEAD
 // This interface now matches the structure from data/mscer.ts and the database table
 export interface MSCer {
   id: string;
@@ -155,6 +156,8 @@ export interface MSCer {
   created_at?: string;
 }
 
+=======
+>>>>>>> parent of 48b962a (up trang chia sẻ)
 export interface BlogPost {
   id: string
   title: string
@@ -268,6 +271,7 @@ export const api = {
     }
   },
   
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   getProjectById: async (id: string): Promise<Project | null> => {
@@ -477,18 +481,45 @@ export const api = {
     try {
       const supabase = createClient()
       const { data, error } = await supabase
+=======
+
+  // Blog posts
+  getBlogPosts: async (): Promise<BlogPost[]> => {
+    try {
+      console.log('🔍 Starting getBlogPosts API call...')
+      
+      const supabase = createClient()
+      const { data, error } = await supabase
+>>>>>>> parent of 48b962a (up trang chia sẻ)
         .from('allblogposts')
         .select('*')
         .order('publish_date', { ascending: false })
       
+<<<<<<< HEAD
       if (error) {
         throw error
       }
+=======
+      console.log('🔍 Blog posts query executed')
+      console.log('🔍 Error:', error)
+      console.log('🔍 Data:', data)
+      console.log('🔍 Data length:', data?.length || 0)
+>>>>>>> parent of 48b962a (up trang chia sẻ)
       
+      if (error) {
+        console.error('❌ Supabase error:', error)
+        throw error
+      }
+      
+      // Transform database data to match BlogPost interface
       const blogPosts: BlogPost[] = (data || []).map((post: any) => ({
         id: post.id.toString(),
         title: post.title,
+<<<<<<< HEAD
         content: post.content || post.details_blog,
+=======
+        content: post.content || post.details_blog, // Use content field if available, fallback to details_blog
+>>>>>>> parent of 48b962a (up trang chia sẻ)
         excerpt: post.excerpt,
         image: post.image,
         author: post.author,
@@ -498,9 +529,16 @@ export const api = {
         read_time: post.read_time,
         category: post.category,
         slug: post.slug,
+<<<<<<< HEAD
         tags: []
       }))
       
+=======
+        tags: [] // Database doesn't have tags field, so empty array
+      }))
+      
+      console.log('✅ Blog posts fetched successfully:', blogPosts.length, 'records')
+>>>>>>> parent of 48b962a (up trang chia sẻ)
       return blogPosts
     } catch (error) {
       console.error('❌ Error fetching blog posts:', error)
@@ -511,6 +549,11 @@ export const api = {
   // Get single blog post by slug
   getBlogPostBySlug: async (slug: string): Promise<BlogPost | null> => {
     try {
+<<<<<<< HEAD
+=======
+      console.log('🔍 Starting getBlogPostBySlug API call for:', slug)
+      
+>>>>>>> parent of 48b962a (up trang chia sẻ)
       const supabase = createClient()
       const { data, error } = await supabase
         .from('allblogposts')
@@ -518,17 +561,33 @@ export const api = {
         .eq('slug', slug)
         .single()
       
+      console.log('🔍 Blog post by slug query executed')
+      console.log('🔍 Error:', error)
+      console.log('🔍 Data:', data)
+      
       if (error) {
+<<<<<<< HEAD
+=======
+        console.error('❌ Supabase error:', error)
+>>>>>>> parent of 48b962a (up trang chia sẻ)
         if (error.code === 'PGRST116') {
           return null // Post not found
         }
         throw error
       }
       
+<<<<<<< HEAD
       const blogPost: BlogPost = {
         id: data.id.toString(),
         title: data.title,
         content: data.content || data.details_blog,
+=======
+      // Transform database data to match BlogPost interface
+      const blogPost: BlogPost = {
+        id: data.id.toString(),
+        title: data.title,
+        content: data.content || data.details_blog, // Use content field if available, fallback to details_blog
+>>>>>>> parent of 48b962a (up trang chia sẻ)
         excerpt: data.excerpt,
         context: data.context,
         image: data.image,
@@ -542,6 +601,10 @@ export const api = {
         tags: []
       }
       
+<<<<<<< HEAD
+=======
+      console.log('✅ Blog post fetched successfully:', blogPost.title)
+>>>>>>> parent of 48b962a (up trang chia sẻ)
       return blogPost
     } catch (error) {
       console.error('❌ Error fetching blog post by slug:', error)
@@ -552,6 +615,8 @@ export const api = {
   // Get blog posts by category
   getBlogPostsByCategory: async (category: string): Promise<BlogPost[]> => {
     try {
+      console.log('🔍 Starting getBlogPostsByCategory API call for:', category)
+      
       const supabase = createClient()
       const { data, error } = await supabase
         .from('allblogposts')
@@ -559,6 +624,7 @@ export const api = {
         .ilike('category', `%${category}%`)
         .order('publish_date', { ascending: false })
       
+<<<<<<< HEAD
       if (error) {
         throw error
       }
@@ -567,6 +633,22 @@ export const api = {
         id: post.id.toString(),
         title: post.title,
         content: post.content || post.details_blog,
+=======
+      console.log('🔍 Blog posts by category query executed')
+      console.log('🔍 Error:', error)
+      console.log('🔍 Data length:', data?.length || 0)
+      
+      if (error) {
+        console.error('❌ Supabase error:', error)
+        throw error
+      }
+      
+      // Transform database data to match BlogPost interface
+      const blogPosts: BlogPost[] = (data || []).map((post: any) => ({
+        id: post.id.toString(),
+        title: post.title,
+        content: post.content || post.details_blog, // Use content field if available, fallback to details_blog
+>>>>>>> parent of 48b962a (up trang chia sẻ)
         excerpt: post.excerpt,
         image: post.image,
         author: post.author,
@@ -579,6 +661,10 @@ export const api = {
         tags: []
       }))
       
+<<<<<<< HEAD
+=======
+      console.log('✅ Blog posts by category fetched successfully:', blogPosts.length, 'records')
+>>>>>>> parent of 48b962a (up trang chia sẻ)
       return blogPosts
     } catch (error) {
       console.error('❌ Error fetching blog posts by category:', error)
@@ -589,6 +675,8 @@ export const api = {
   // Get top posts from view
   getTopPosts: async (): Promise<any[]> => {
     try {
+      console.log('🔍 Starting getTopPosts API call...')
+      
       const supabase = createClient()
       const { data, error } = await supabase
         .from('top_posts')
@@ -596,10 +684,24 @@ export const api = {
         .order('views', { ascending: false })
         .limit(5)
       
+<<<<<<< HEAD
       if (error) {
         throw error
       }
       
+=======
+      console.log('🔍 Top posts query executed')
+      console.log('🔍 Error:', error)
+      console.log('🔍 Data:', data)
+      console.log('🔍 Data length:', data?.length || 0)
+      
+      if (error) {
+        console.error('❌ Supabase error:', error)
+        throw error
+      }
+      
+      console.log('✅ Top posts fetched successfully:', data?.length || 0, 'records')
+>>>>>>> parent of 48b962a (up trang chia sẻ)
       return data || []
     } catch (error) {
       console.error('❌ Error fetching top posts:', error)
