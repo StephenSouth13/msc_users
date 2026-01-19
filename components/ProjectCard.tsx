@@ -1,17 +1,13 @@
-// src/components/ProjectCard.tsx
-
 "use client"
 
 import Image from "next/image"
 import Link from "next/link"
-<<<<<<< HEAD
-import { ArrowRight, Users, Award } from "lucide-react"
-=======
-import { ArrowRight } from "lucide-react"
->>>>>>> parent of 48b962a (up trang chia sẻ)
+import { ArrowRight, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Project } from "@/lib/api-supabase"
 
 interface ProjectCardProps {
@@ -19,116 +15,106 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  // Xử lý logic Mentor Đỉnh cao
+  const mentors = project.mentors || [];
+  const maxDisplay = 3; // Hiện tối đa 3 ảnh xếp chồng
+  const displayMentors = mentors.slice(0, maxDisplay);
+  const remainingCount = mentors.length - maxDisplay;
+
   return (
-    <Card className="h-full flex flex-col overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 group bg-white dark:bg-neutral-800 border-none">
-      {/* PHẦN ẢNH DỰ ÁN */}
+    <Card className="h-full flex flex-col overflow-hidden rounded-[2rem] border-none shadow-sm hover:shadow-2xl transition-all duration-500 group bg-white dark:bg-neutral-800">
+      {/* 1. PHẦN ẢNH DỰ ÁN - TỈ LỆ VÀNG */}
       <CardHeader className="p-0">
         <div className="relative aspect-[16/10] overflow-hidden">
           <Image
             src={project.image || '/placeholder.jpg'}
             alt={project.title}
             fill
-            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+            className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          {/* Lớp phủ gradient để nổi bật Badge */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
           
-          <Badge className="absolute top-4 left-4 bg-white/95 dark:bg-neutral-900/90 text-blue-700 dark:text-blue-400 font-bold shadow-lg border-none px-3 py-1 text-[11px] uppercase tracking-wider">
+          <Badge className="absolute top-6 left-6 bg-white/95 dark:bg-neutral-900/90 text-slate-900 font-black shadow-xl border-none px-4 py-1.5 rounded-full text-[10px] uppercase tracking-[0.2em]">
             {project.category}
           </Badge>
         </div>
       </CardHeader>
       
-      <CardContent className="p-6 flex flex-col flex-grow">
-        {/* TIÊU ĐỀ & MÔ TẢ */}
-        <CardTitle className="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-tight group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
+      {/* 2. NỘI DUNG DỰ ÁN */}
+      <CardContent className="p-8 flex flex-col flex-grow">
+        <CardTitle className="text-xl font-black text-gray-900 dark:text-white mb-4 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">
           {project.title}
         </CardTitle>
-        <p className="text-gray-600 dark:text-neutral-400 text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
+        <p className="text-gray-500 dark:text-neutral-400 text-sm leading-relaxed mb-8 flex-grow line-clamp-3 italic font-medium">
           {project.description}
         </p>
         
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> parent of 48b962a (up trang chia sẻ)
-        {/* PHẦN ĐỘI NGŨ MENTOR - THIẾT KẾ XỊN ĐẸP */}
-        <div className="mt-auto pt-5 border-t border-gray-100 dark:border-neutral-700">
-          <p className="text-[10px] font-black uppercase text-blue-600 dark:text-blue-400 tracking-[0.15em] flex items-center gap-2 mb-3">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
-            Mentoring & Coaching
-          </p>
-          
-          <div className="flex flex-wrap gap-2.5">
-            {project.mentors && project.mentors.length > 0 ? (
-              project.mentors.map((mentor, index) => (
-                <Link 
-                  key={mentor.id || index} 
-                  href={`/mentors/${mentor.slug}`} // Link chuẩn bạn yêu cầu
-                  className="group/mentor relative flex items-center transition-all duration-300 active:scale-95"
-                  onClick={(e) => e.stopPropagation()} // Tránh bị nhảy vào trang chi tiết dự án khi click vào mentor
-                >
-                  <div className="flex items-center gap-2 bg-gray-50 dark:bg-neutral-900 hover:bg-blue-50 dark:hover:bg-blue-900/20 p-1 pr-3 rounded-full border border-gray-200 dark:border-neutral-700 group-hover/mentor:border-blue-300 dark:group-hover/mentor:border-blue-800 transition-all shadow-sm">
-                    {/* Avatar nhỏ gọn */}
-                    <div className="relative w-7 h-7 overflow-hidden rounded-full border-2 border-white dark:border-neutral-800 shadow-sm shrink-0">
-                      <Image 
-                        src={mentor.avatar_url || '/placeholder-avatar.jpg'} 
-                        alt={mentor.full_name} 
-                        fill 
-                        sizes="28px"
-                        className="object-cover transition-transform duration-500 group-hover/mentor:scale-115"
-                      />
-                    </div>
-                    
-                    {/* Tên Mentor & Tooltip chức danh ẩn */}
-                    <div className="flex flex-col">
-                      <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-200 group-hover/mentor:text-blue-700 dark:group-hover/mentor:text-blue-400 transition-colors leading-none">
-                        {mentor.full_name}
-                      </span>
-                    </div>
-                  </div>
+        {/* 3. PHẦN ĐỘI NGŨ MENTOR - CHỐNG CHEN HÀNG TUYỆT ĐỐI */}
+        <div className="mt-auto pt-6 border-t border-slate-50 dark:border-neutral-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {/* Avatar Stack Logic */}
+              <div className="flex -space-x-3 items-center">
+                {displayMentors.map((mentor, i) => (
+                  <Avatar key={i} className="h-10 w-10 border-2 border-white dark:border-neutral-800 shadow-md transition-transform hover:-translate-y-1 hover:z-30 cursor-pointer">
+                    <AvatarImage src={mentor.avatar_url} className="object-cover" />
+                    <AvatarFallback className="text-[10px] font-black bg-blue-50 text-blue-600">
+                      {mentor.full_name?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                ))}
 
-                  {/* Tooltip Chức danh (Hiện khi hover) */}
-                  {mentor.title && (
-                    <div className="absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-[9px] font-bold rounded shadow-xl opacity-0 group-hover/mentor:opacity-100 pointer-events-none transition-all duration-300 -translate-y-1 group-hover/mentor:translate-y-0 z-50 whitespace-nowrap">
-                      {mentor.title}
-                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-neutral-900 dark:bg-white rotate-45"></div>
-                    </div>
-                  )}
-                </Link>
-              ))
-            ) : (
-              <span className="text-[11px] text-gray-400 italic">Đang cập nhật chuyên gia...</span>
-            )}
-          </div>
-=======
-        <div className="mt-auto space-y-3">
-            <div className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-200">
-                <Users className="h-4 w-4 mr-2 flex-shrink-0" />
-                <span>Người hướng dẫn:</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-                {Array.isArray(project.mentors) && project.mentors.length > 0 && project.mentors[0] !== '' ? (
-                    project.mentors.map((mentorName: string, index: number) => (
-                        <Badge key={index} variant="outline" className="font-normal bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-200">
-                            <Award className="h-3 w-3 mr-1.5" />
-                            {mentorName}
-                        </Badge>
-                    ))
-                ) : (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">Chưa có thông tin</p>
+                {/* Nút +n (Mở danh sách ẩn) */}
+                {remainingCount > 0 && (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="h-10 w-10 rounded-full bg-slate-900 text-white border-2 border-white flex items-center justify-center text-[10px] font-black hover:bg-blue-600 transition-all shadow-lg z-20 hover:scale-110">
+                        +{remainingCount}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-72 p-5 rounded-[2rem] shadow-2xl border-none bg-white/95 backdrop-blur-xl z-[100]">
+                      <div className="flex items-center gap-2 mb-4 border-b pb-2">
+                        <Users size={16} className="text-blue-600" />
+                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Đội ngũ chuyên gia</span>
+                      </div>
+                      <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                        {mentors.map((m, idx) => (
+                          <Link key={idx} href={`/mentors/${m.slug}`} className="flex items-center gap-3 group/item">
+                            <Avatar className="h-9 w-9 shadow-sm group-hover/item:scale-110 transition-transform">
+                              <AvatarImage src={m.avatar_url} />
+                              <AvatarFallback className="font-bold">{m.full_name?.[0]}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-black text-slate-700 group-hover/item:text-blue-600 transition-colors leading-none">{m.full_name}</span>
+                              <span className="text-[10px] text-slate-400 font-bold uppercase mt-1">{m.title || "Mentor"}</span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 )}
-            </div>
+              </div>
 
->>>>>>> a05a58dc4d60f7219407f17c7066bf57b15f0e95
+              {/* Tên hiển thị rút gọn */}
+              <div className="flex flex-col ml-1">
+                <span className="text-[12px] font-black text-slate-900 dark:text-white leading-none">
+                  {mentors[0]?.full_name || "MSC Team"}
+                </span>
+                <span className="text-[9px] text-slate-400 uppercase font-black mt-1.5 tracking-tighter">
+                  {mentors.length > 1 ? `& ${mentors.length - 1} chuyên gia khác` : "Chuyên gia đào tạo"}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
         
         {/* NÚT XEM CHI TIẾT */}
-        <Link href={`/du-an/${project.slug || project.id}`} className="mt-6">
-          <Button className="w-full bg-blue-800 hover:bg-blue-900 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold rounded-xl h-11 group/btn shadow-lg shadow-blue-100 dark:shadow-none transition-all">
+        <Link href={`/du-an/${project.slug || project.id}`} className="mt-8">
+          <Button className="w-full bg-blue-800 hover:bg-slate-900 dark:bg-blue-700 text-white font-black rounded-2xl h-14 group/btn shadow-xl shadow-blue-100 dark:shadow-none transition-all duration-300 uppercase text-xs tracking-widest">
             Xem chi tiết dự án
-            <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+            <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-2 transition-transform" />
           </Button>
         </Link>
       </CardContent>

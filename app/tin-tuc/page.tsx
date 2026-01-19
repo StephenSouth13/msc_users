@@ -3,259 +3,146 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { Calendar, User, ArrowRight, Rss, Mail } from "lucide-react"
+import { Calendar, User, Clock, Eye, BookOpen, TrendingUp, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { useEffect, useState } from "react"
 import { api, BlogPost } from "@/lib/api-supabase"
 
-// ====================================
-// ANIMATION VARIANTS
-// ====================================
-const containerVariants = { 
-  hidden: { opacity: 0 }, 
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } } 
-};
-const itemVariants = { 
-  hidden: { opacity: 0, y: 20 }, 
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } } 
-};
-
-// ====================================
-// HELPER COMPONENTS
-// ====================================
-
-// Component Card bài viết cho lưới phụ
-const PostCard = ({ post }: { post: BlogPost }) => {
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return 'Ngày không xác định';
-    return new Date(dateString).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
-  };
-
-  return (
-    <motion.div variants={itemVariants} className="h-full">
-      <Link href={`/tin-tuc/${post.slug}`} className="block h-full">
-        <Card className="h-full flex flex-col group overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800 border border-gray-200/80 dark:border-gray-700/60 hover:border-blue-500 dark:hover:border-blue-400">
-          <div className="relative aspect-[16/10] overflow-hidden">
-            <Image 
-              src={post.image || '/placeholder-image.jpg'} 
-              alt={post.title} 
-              fill 
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
-          </div>
-          <CardContent className="p-5 flex flex-col flex-grow">
-            {post.category &&
-              <p className="text-sm font-bold text-blue-600 dark:text-blue-400 mb-2 uppercase tracking-wider">{post.category}</p>
-            }
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 leading-snug group-hover:text-blue-700 dark:group-hover:text-blue-400">
-              {post.title}
-            </h2>
-            <div className="mt-auto pt-4 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-              <div className="flex items-center space-x-2">
-                  <User className="h-4 w-4" />
-                  <span className="font-medium truncate">{post.author || 'MSC Center'}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                  <Calendar className="h-4 w-4" />
-                  <span>{formatDate(post.publish_date)}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </Link>
-    </motion.div>
-  )
-};
-
-// Component Card cho bài viết nổi bật
-const FeaturedPostCard = ({ post }: { post: BlogPost }) => {
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return 'Ngày không xác định';
-    return new Date(dateString).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
-  };
-
-  return (
-    <motion.div variants={itemVariants} className="w-full">
-      <Link href={`/tin-tuc/${post.slug}`} className="block">
-        <Card className="group overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 bg-white dark:bg-gray-800 grid md:grid-cols-2 border border-gray-200/80 dark:border-gray-700/60">
-          <div className="relative aspect-[16/10] md:aspect-auto overflow-hidden">
-             <Image 
-                src={post.image || '/placeholder-image.jpg'} 
-                alt={post.title} 
-                fill 
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width: 767px) 100vw, 50vw"
-              />
-          </div>
-          <div className="p-8 flex flex-col justify-center">
-            <p className="text-md font-bold text-blue-600 dark:text-blue-400 mb-3 uppercase tracking-widest">Bài viết mới nhất</p>
-            <h1 className="text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 line-clamp-3 leading-tight group-hover:text-blue-700 dark:group-hover:text-blue-400">
-              {post.title}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-6 line-clamp-3 leading-relaxed">{post.excerpt}</p>
-            <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                <div className="flex items-center space-x-2">
-                    <User className="h-4 w-4" />
-                    <span className="font-medium">{post.author || 'MSC Center'}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>{formatDate(post.publish_date)}</span>
-                </div>
-            </div>
-             <div className="mt-8">
-                <div className="inline-flex items-center font-semibold text-blue-600 dark:text-blue-400 group-hover:text-blue-800 transition-colors duration-300">
-                    Đọc bài viết
-                    <ArrowRight className="ml-2 h-5 w-5 transform transition-transform duration-300 group-hover:translate-x-1" />
-                </div>
-            </div>
-          </div>
-        </Card>
-      </Link>
-    </motion.div>
-  )
-}
-
-// ====================================
-// MAIN PAGE COMPONENT
-// ====================================
-export default function NewsPage() {
-  const [posts, setPosts] = useState<BlogPost[]>([])
+export default function BlogPage() {
+  const [allBlogPosts, setAllBlogPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchBlogPosts = async () => {
       try {
         setLoading(true)
-        // Lấy bài viết và sắp xếp theo ngày mới nhất
         const blogPosts = await api.getBlogPosts()
-        setPosts(blogPosts || [])
+        setAllBlogPosts(blogPosts || [])
       } catch (err) {
-        setError('Có lỗi xảy ra khi tải bài viết.')
-        console.error('Error fetching posts:', err)
-      } finally {
-        setLoading(false)
-      }
+        setError('Lỗi tải dữ liệu bài viết')
+        console.error('Error:', err)
+      } finally { setLoading(false) }
     }
-
-    fetchPosts()
+    fetchBlogPosts()
   }, [])
 
-  const featuredPost = posts[0]
-  const otherPosts = posts.slice(1)
+  const featuredPost = allBlogPosts[0]
+  const recentPosts = allBlogPosts.slice(1)
 
-  // Loading State
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-24 w-24 border-b-4 border-blue-600 mx-auto"></div>
-          <p className="mt-6 text-lg font-semibold text-gray-700 dark:text-gray-200">Đang tải trang Tin tức...</p>
-        </div>
-      </div>
-    )
-  }
+  const stats = [
+    { label: "Bài viết chuyên môn", value: "50+", icon: BookOpen },
+    { label: "Lượt đọc hàng tháng", value: "10K+", icon: Eye },
+    { label: "Chuyên gia đóng góp", value: "10+", icon: User },
+    { label: "Lĩnh vực chia sẻ", value: "8+", icon: TrendingUp },
+  ]
 
-  // Error State
-  if (error) {
-    return (
-      <div className="min-h-screen bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-center p-4">
-        <div>
-          <h2 className="text-2xl font-bold text-red-700 dark:text-red-400">Đã xảy ra lỗi</h2>
-          <p className="text-red-600 dark:text-red-300 mt-2">{error}</p>
-          <Button onClick={() => window.location.reload()} className="mt-6">
-            Tải lại trang
-          </Button>
-        </div>
-      </div>
-    )
-  }
+  if (loading) return (
+    <div className="min-h-screen bg-white pt-20 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-24 w-24 border-b-2 border-blue-600"></div>
+    </div>
+  )
+
+  if (error || !featuredPost) return <div className="p-40 text-center font-bold text-slate-300 italic">Hiện tại chưa có bài viết nào được xuất bản.</div>
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900/95">
-      {/* Hero Section */}
-      <motion.section 
-        className="py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-900/95 text-center"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      >
-        <div className="container mx-auto px-4">
-          <motion.div variants={itemVariants}>
-            <div className="inline-block bg-blue-100 dark:bg-blue-900/30 p-4 rounded-full mb-6 ring-4 ring-blue-500/20">
-              <Rss className="h-10 w-10 text-blue-600 dark:text-blue-400" />
-            </div>
-            <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
-              Tin tức & Sự kiện
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mx-auto max-w-2xl">
-              Cập nhật những thông tin, bài viết và sự kiện mới nhất từ MSC Center.
-            </p>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Main Content */}
-      <main className="py-16">
-        <div className="container mx-auto px-4">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="space-y-16"
-          >
-            {/* Featured Post */}
-            {featuredPost && <FeaturedPostCard post={featuredPost} />}
-
-            {/* Other Posts Grid */}
-            {otherPosts.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-                {otherPosts.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </div>
-            )}
-
-            {/* No Posts State */}
-            {posts.length === 0 && (
-              <motion.div variants={itemVariants} className="text-center py-20">
-                  <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">Chưa có bài viết nào</h2>
-                  <p className="text-gray-500 dark:text-gray-400 mt-4">Nội dung mới sẽ sớm được cập nhật. Vui lòng quay lại sau.</p>
-              </motion.div>
-            )}
-          </motion.div>
-        </div>
-      </main>
-
-      {/* Newsletter Subscription Section */}
-      <section className="py-24 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-        <div className="container mx-auto px-4 text-center max-w-3xl">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
-              <div className="inline-block bg-blue-100 dark:bg-blue-900/30 p-4 rounded-full mb-6 ring-4 ring-blue-500/20">
-                  <Mail className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-              </div>
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Đừng bỏ lỡ tin tức mới</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto">
-                  Đăng ký để nhận những bài viết chuyên sâu và cập nhật mới nhất từ chúng tôi, thẳng vào hộp thư của bạn.
-              </p>
-              <form className="flex flex-col sm:flex-row max-w-lg mx-auto gap-3">
-                  <Input 
-                      type="email" 
-                      placeholder="Nhập email của bạn" 
-                      className="flex-grow h-12 text-base bg-white dark:bg-gray-800"
-                      required
-                  />
-                  <Button type="submit" size="lg" className="h-12 text-base">
-                      Đăng ký ngay
-                  </Button>
-              </form>
+    <div className="min-h-screen bg-gray-50/50">
+      {/* Header */}
+      <section className="py-24 bg-slate-900 text-white relative">
+        <div className="container relative z-10 text-center max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+            <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 mb-6 px-4 py-1 uppercase text-[10px] font-black tracking-[0.2em]">Knowledge Hub</Badge>
+            <h1 className="text-5xl md:text-7xl font-black mb-6 font-serif tracking-tight leading-tight">Chia sẻ & Tri thức</h1>
+            <p className="text-xl text-slate-400 font-medium italic">Nơi hội tụ kiến thức thực tiễn từ chuyên gia MSC.</p>
           </motion.div>
         </div>
       </section>
 
+      {/* Stats */}
+      <section className="py-12 bg-white border-y border-slate-100 shadow-sm relative z-20 -mt-10 mx-auto container rounded-[2.5rem] px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <div key={index} className="text-center">
+              <div className="text-3xl font-black text-slate-900 mb-1">{stat.value}</div>
+              <p className="text-[10px] uppercase font-black tracking-widest text-slate-400">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FEATURED - Cinematic Article */}
+      <section className="py-20 container px-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <Link href={`/chia-se/${featuredPost.slug}`}>
+            <div className="relative group overflow-hidden rounded-[3.5rem] bg-slate-900 aspect-[21/9] shadow-2xl shadow-blue-900/20">
+              <Image src={featuredPost.image || '/placeholder.jpg'} fill className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" alt="Cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent p-10 md:p-20 flex flex-col justify-end">
+                <Badge className="w-fit mb-4 bg-red-600 text-white font-black px-4 py-1 uppercase text-[10px]">Tiêu biểu</Badge>
+                <h2 className="text-3xl md:text-6xl font-black text-white mb-6 max-w-4xl leading-tight tracking-tight">{featuredPost.title}</h2>
+                <p className="text-lg text-slate-300 mb-10 max-w-2xl line-clamp-2 italic font-medium">"{featuredPost.excerpt}"</p>
+                <div className="flex flex-wrap items-center gap-8">
+                   <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md p-2 pr-6 rounded-full border border-white/10 shadow-xl">
+                      <div className="flex -space-x-3">
+                        {featuredPost.authors?.map((auth, i) => (
+                          <Avatar key={i} className="border-2 border-slate-900 w-12 h-12"><AvatarImage src={auth.avatar_url}/></Avatar>
+                        ))}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[9px] font-black uppercase text-blue-400 leading-none mb-1">Expert Authors</span>
+                        <span className="text-sm font-bold text-white">{featuredPost.authors?.map(a => a.full_name).join(', ')}</span>
+                      </div>
+                   </div>
+                   <div className="flex items-center gap-6 text-slate-400 text-xs font-black uppercase tracking-widest">
+                      <div className="flex items-center gap-2"><Calendar size={16}/> {new Date(featuredPost.publish_date || '').toLocaleDateString('vi-VN')}</div>
+                      <div className="flex items-center gap-2"><Clock size={16}/> {featuredPost.read_time}</div>
+                   </div>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </motion.div>
+      </section>
+
+      {/* Recent Grid */}
+      <section className="py-20 container px-4">
+        <div className="flex items-end justify-between mb-16 border-b border-slate-100 pb-8">
+          <div>
+            <h2 className="text-4xl font-black text-slate-900">Bài viết mới nhất</h2>
+            <p className="text-slate-400 font-bold text-sm mt-2 uppercase tracking-widest">Cập nhật tri thức mỗi ngày</p>
+          </div>
+          <Link href="/chia-se/all"><Button variant="ghost" className="font-black text-blue-600 hover:bg-blue-50">TẤT CẢ BÀI VIẾT <ArrowRight size={18} className="ml-2"/></Button></Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {recentPosts.map((post, index) => (
+            <motion.div key={post.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} viewport={{ once: true }}>
+              <Link href={`/chia-se/${post.slug}`}>
+                <Card className="h-full flex flex-col group overflow-hidden rounded-[2.5rem] border-none bg-white shadow-lg hover:shadow-2xl transition-all duration-500">
+                  <div className="relative aspect-video overflow-hidden">
+                    <Image src={post.image || '/placeholder-image.jpg'} alt={post.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <Badge className="bg-white/90 backdrop-blur-md text-slate-900 absolute top-6 left-6 font-black uppercase text-[9px] tracking-widest px-3 py-1 rounded-full shadow-xl border-none">{post.category}</Badge>
+                  </div>
+                  <CardContent className="p-10 flex flex-col flex-grow">
+                    <h3 className="text-2xl font-black text-slate-900 mb-4 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">{post.title}</h3>
+                    <p className="text-slate-500 text-sm font-medium line-clamp-3 mb-10 italic leading-relaxed">{post.excerpt}</p>
+                    <div className="mt-auto pt-8 border-t border-slate-50 flex items-center justify-between">
+                       <div className="flex -space-x-2">
+                          {post.authors?.map((auth, i) => (
+                            <Avatar key={i} className="h-9 w-9 border-2 border-white shadow-sm"><AvatarImage src={auth.avatar_url}/></Avatar>
+                          ))}
+                       </div>
+                       <div className="text-[10px] font-black uppercase text-slate-400 tracking-[0.1em]">{new Date(post.publish_date || '').toLocaleDateString('vi-VN')}</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }

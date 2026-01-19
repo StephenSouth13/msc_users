@@ -99,11 +99,7 @@ export default function ProjectsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
             >
-<<<<<<< HEAD
               DỰ ÁN ĐÃ TRIỂN KHAI
-=======
-              Dự án Đã Triển Khai
->>>>>>> parent of 48b962a (up trang chia sẻ)
             </motion.h1>
             <motion.p 
               className="text-xl text-blue-100 mb-8 leading-relaxed"
@@ -111,11 +107,7 @@ export default function ProjectsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4 }}
             >
-<<<<<<< HEAD
               Các dự án Mentoring & Coaching thực tế mà MSC Center đã triển khai.
-=======
-              Khám phá các dự án đào tạo và phát triển thực tế mà MSC Center đã triển khai, mang lại giá trị bền vững cho đối tác và học viên.
->>>>>>> parent of 48b962a (up trang chia sẻ)
             </motion.p>
           </div>
         </div>
@@ -155,15 +147,9 @@ export default function ProjectsPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-<<<<<<< HEAD
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">CÁC DỰ ÁN NỔI BẬT</h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Từ các tập đoàn lớn đến đại học và cao đẳng, mỗi dự án là một câu chuyện thành công.
-=======
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">Các Dự Án Nổi Bật</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Từ các tập đoàn lớn đến những doanh nghiệp SMEs, mỗi dự án là một câu chuyện thành công.
->>>>>>> parent of 48b962a (up trang chia sẻ)
             </p>
           </motion.div>
 
@@ -197,9 +183,8 @@ export default function ProjectsPage() {
                       <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">{project.title}</CardTitle> {/* Chữ tiêu đề */}
                       <p className="text-gray-600 dark:text-gray-300 mb-6 flex-grow">{project.description}</p> {/* Chữ mô tả */}
                       
-<<<<<<< HEAD
                       <div className="mt-auto">
-                          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Chuyên gia phụ trách:</p> {/* Chữ label */}
+                          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Mentoring & Coaching:</p> {/* Chữ label */}
                           <div className="flex items-center space-x-2">
                              {project.mentors?.map((mentor: any, index: number) => (
                                  <div key={index} className="flex items-center space-x-2">
@@ -207,58 +192,11 @@ export default function ProjectsPage() {
                                      <span className="text-sm text-gray-800 dark:text-gray-200">{mentor.name}</span> {/* Tên mentor */}
                                  </div>
                              ))}
+
+
+
                           </div>
                       </div>
-=======
-                      
-
-                     <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
-  <p className="text-[10px] font-bold uppercase text-blue-600 dark:text-blue-400 mb-3 tracking-widest flex items-center gap-1.5">
-    <span className="w-1 h-1 bg-blue-600 rounded-full animate-pulse"></span>
-    Mentoring & Coaching
-  </p>
-  
-  <div className="flex flex-wrap gap-3">
-    {project.mentors && project.mentors.length > 0 ? (
-      project.mentors.map((mentor: any, index: number) => (
-        <Link 
-          key={mentor.id || index} 
-          href={`/mentors/${mentor.slug}`} // Link đến trang chi tiết chuyên gia
-          className="group/mentor relative flex items-center transition-all duration-300 hover:z-10"
-        >
-          <div className="flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 pl-1 pr-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 shadow-sm hover:shadow-md transition-all">
-            {/* Ảnh Avatar nhỏ gọn */}
-            <div className="relative w-7 h-7 overflow-hidden rounded-full border-2 border-white dark:border-gray-600 shadow-sm">
-              <Image 
-                src={mentor.avatar_url || '/placeholder-avatar.jpg'} 
-                alt={mentor.full_name} 
-                fill 
-                sizes="28px"
-                className="object-cover transition-transform duration-300 group-hover/mentor:scale-110"
-              />
-            </div>
-            
-            {/* Tên Mentor */}
-            <span className="text-[12px] font-bold text-gray-700 dark:text-gray-200 group-hover/mentor:text-blue-700 dark:group-hover/mentor:text-blue-400 transition-colors whitespace-nowrap">
-              {mentor.full_name}
-            </span>
-          </div>
-
-          {/* Tooltip hiển thị nhanh chức danh (nếu có) */}
-          {mentor.title && (
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-[9px] rounded opacity-0 group-hover/mentor:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-xl">
-              {mentor.title}
-              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
-            </div>
-          )}
-        </Link>
-      ))
-    ) : (
-      <span className="text-[11px] text-gray-400 italic">Đang cập nhật chuyên gia...</span>
-    )}
-  </div>
-</div>
->>>>>>> parent of 48b962a (up trang chia sẻ)
                       <Link href={`/du-an/${project.slug}`} className="mt-6">
                         {/* Button chính có thể giữ nguyên hoặc điều chỉnh nếu bạn có button variant cho dark mode */}
                         <Button className="w-full btn-primary group-hover:bg-blue-700 transition-colors">
@@ -293,11 +231,7 @@ export default function ProjectsPage() {
               </p>
               <Link href="/lien-he">
                   <Button size="lg" className="btn-primary text-lg px-10 py-6">
-<<<<<<< HEAD
                     Liên hệ ngay
-=======
-                    Tư vấn giải pháp
->>>>>>> parent of 48b962a (up trang chia sẻ)
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
               </Link>

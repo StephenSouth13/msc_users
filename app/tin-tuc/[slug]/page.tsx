@@ -123,7 +123,11 @@ export default function NewsPostPage({ params }: { params: { slug: string } }) {
               <div className="flex flex-wrap items-center space-x-6 text-gray-500 dark:text-gray-400">
                 <div className="flex items-center space-x-2">
                   <User className="h-5 w-5" />
-                  <span className="font-medium">{post.author || 'MSC Center'}</span>
+                  <span className="font-medium">
+                    {post.authors && post.authors.length > 0 
+                      ? post.authors.map(auth => auth.full_name).join(', ') 
+                      : 'MSC Center'}
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Calendar className="h-5 w-5" />
