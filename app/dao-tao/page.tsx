@@ -144,7 +144,7 @@ export default function TrainingPage() {
                 <div className="text-sm text-blue-200">Chương trình</div> {/* Giữ màu xanh nhạt */}
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-teal-300">5000+</div>
+                <div className="text-3xl font-bold text-teal-300">1000+</div>
                 <div className="text-sm text-blue-200">Học viên</div>
               </div>
               <div className="text-center">
