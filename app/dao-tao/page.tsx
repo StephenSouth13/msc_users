@@ -399,7 +399,7 @@ export default function TrainingPage() {
                 Đăng ký tư vấn miễn phí
               </Button>
             </Link>
-            <Link href="/chia-se">
+            <Link href="/tin-tuc">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-4 bg-transparent dark:border-gray-500 dark:hover:bg-gray-700/30"> {/* Nút outline trong CTA */}
                 Tải brochure
               </Button>

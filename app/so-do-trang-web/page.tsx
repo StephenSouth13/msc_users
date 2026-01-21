@@ -96,20 +96,20 @@ export default function SiteMapPage() {
     },
     {
       title: "Chia sẻ",
-      href: "/chia-se",
+      href: "/tin-tuc",
       icon: <FileText className="h-5 w-5" />,
       description: "Blog, bài viết và tin tức từ MSC Center",
       children: [
         {
           title: "Danh mục bài viết",
-          href: "/chia-se/category/[category]",
+          href: "/tin-tuc/category/[category]",
           icon: <FolderOpen className="h-4 w-4" />,
           description: "Bài viết theo danh mục",
           isDynamic: true
         },
         {
           title: "Chi tiết bài viết",
-          href: "/chia-se/[slug]",
+          href: "/tin-tuc/[slug]",
           icon: <FileText className="h-4 w-4" />,
           description: "Nội dung chi tiết của từng bài viết",
           isDynamic: true

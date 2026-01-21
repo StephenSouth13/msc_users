@@ -11,23 +11,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // --- THÊM CÁC MÀU THƯƠNG HIỆU VÀO ĐÂY ---
         social: {
           facebook: "#1877F2",
           linkedin: "#0A66C2",
           youtube: "#FF0000",
-          "msc-assistant": "#14b8a6", // Màu Teal-500
+          "msc-assistant": "#14b8a6",
         },
-        // --- GIỮ NGUYÊN CÁC MÀU HIỆN CÓ CỦA BẠN ---
         primary: {
           DEFAULT: "#0C3C78",
           50: "#E6F0FF",
-          // ... các màu primary khác
         },
         accent: {
           DEFAULT: "#F7931E",
           50: "#FEF7ED",
-          // ... các màu accent khác
         },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -55,9 +51,14 @@ const config: Config = {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
       },
+      // --- CẬP NHẬT PHÔNG CHỮ MONTSERRAT TẠI ĐÂY ---
       fontFamily: {
-        sans: ["var(--font-roboto)", "sans-serif"],
-        serif: ["var(--font-merriweather)", "serif"],
+        // 'sans' là phông mặc định của Tailwind, đặt Montserrat lên đầu
+        sans: ["Montserrat", "var(--font-roboto)", "sans-serif"],
+        // 'serif' nếu bạn muốn dùng cho các tiêu đề nghệ thuật
+        serif: ["Montserrat", "var(--font-merriweather)", "serif"],
+        // Tạo thêm class riêng 'font-montserrat' để dùng khi cần thiết
+        montserrat: ["Montserrat", "sans-serif"],
       },
       animation: {
         "fade-in": "fadeIn 0.6s ease-in-out",

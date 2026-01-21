@@ -1,57 +1,128 @@
 'use client'
 
-import { mscersData } from "@/data/mscer";
-import MentorCard from "@/components/MentorCard";
-import { motion } from "framer-motion";
+import { useEffect, useState } from 'react'
+import { motion } from "framer-motion"
+import Image from "next/image"
+import Link from "next/link"
+import { Star, ArrowRight, Loader2, ShieldCheck } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { api, MSCer } from "@/lib/api-supabase"
 
 export default function DirectorsSection() {
-  const directorIds = ["pham-hoang-minh-khanh", "duong-the-khai", "quach-thanh-long"];
-  const directors = mscersData.filter(mscer => directorIds.includes(mscer.id));
+  const [directors, setDirectors] = useState<MSCer[]>([])
+  const [loading, setLoading] = useState(true)
 
-  if (directors.length === 0) {
-    return (
-      <div className="container py-12 text-center text-gray-500 dark:text-gray-400">
-        Không có dữ liệu giám đốc để hiển thị.
-      </div>
-    );
-  }
+  useEffect(() => {
+    const fetchDirectors = async () => {
+      try {
+        setLoading(true)
+        // Lấy toàn bộ dữ liệu MSCers đã được sắp xếp order từ API
+        const data = await api.getMSCer()
+        
+        /**
+         * LOGIC LỌC TỰ ĐỘNG:
+         * Chỉ lấy những người được bật switch "is_director" trong CMS.
+         */
+        const filtered = data.filter(mscer => mscer.is_director && mscer.is_active);
+
+        setDirectors(filtered)
+      } catch (error) {
+        console.error("❌ Error fetching Directors:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchDirectors()
+  }, [])
+
+  if (loading) return (
+    <div className="flex justify-center py-20">
+      <Loader2 className="animate-spin text-blue-600" size={40} />
+    </div>
+  )
+
+  if (directors.length === 0) return null
 
   return (
-    <section className="py-12 bg-white dark:bg-gray-950">
-      <div className="container">
+    <section className="py-24 bg-white dark:bg-slate-950">
+      <div className="container mx-auto px-6 text-center">
+        {/* --- Header Section --- */}
         <motion.div
-          className="text-center mb-10"
-          initial={{ opacity: 0, y: 50 }}
+          className="mb-20"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-50 mb-4">
-            BAN CHỦ NHIỆM
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Đội ngũ quản lý và thực thi của MSC Center.
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <ShieldCheck className="text-blue-600 w-10 h-10" />
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter italic">
+              BAN CHỦ NHIỆM
+            </h2>
+          </div>
+          <div className="w-20 h-1.5 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
+            Đội ngũ lãnh đạo nòng cốt định hướng chiến lược tại MSC Center.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* --- Grid Layout: Luôn cân xứng tuyệt đối --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto items-stretch text-center">
           {directors.map((director, index) => (
             <motion.div
               key={director.id}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
+              className="flex"
             >
-              <MentorCard
-                id={director.id}
-                name={director.name}
-                title={director.position}
-                degree={director.company}
-                avatar={director.avatar}
-                specialties={director.skills} // Thuộc tính này sẽ hoạt động nếu đã được định nghĩa trong MentorCard.tsx
-                linkPrefix="mscer"
-              />
+              <Card className="flex flex-col w-full border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-[3rem] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_40px_80px_-20px_rgba(37,99,235,0.15)] transition-all duration-500 overflow-hidden relative group">
+                <CardContent className="p-10 flex flex-col items-center h-full">
+                  
+                  {/* Avatar & Badge chuẩn mẫu */}
+                  <div className="relative mb-8 shrink-0">
+                    <div className="relative w-40 h-40 rounded-full p-1 bg-white dark:bg-slate-800 shadow-xl overflow-hidden border border-slate-100">
+                      <Image
+                        src={director.avatar_url || '/MSCers/default.webp'}
+                        alt={director.full_name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    </div>
+                    {/* Badge xanh dương chuẩn vị trí ảnh mẫu */}
+                    <div className="absolute bottom-1 right-1 bg-[#3b82f6] p-2.5 rounded-full border-[4px] border-white dark:border-slate-900 shadow-lg text-white transform transition-transform group-hover:rotate-12">
+                      <Star size={18} className="fill-white" />
+                    </div>
+                  </div>
+
+                  <div className="w-full flex flex-col flex-grow">
+                    <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-2 uppercase group-hover:text-blue-600 transition-colors">
+                      {director.full_name}
+                    </h3>
+                    
+                    <p className="text-[#3b82f6] font-extrabold text-lg uppercase tracking-wide mb-6">
+                      {director.position}
+                    </p>
+
+                    <div className="flex-grow flex items-center justify-center mb-8">
+                      <blockquote className="text-slate-500 dark:text-slate-400 text-base italic leading-relaxed px-4">
+                        "{director.achievement_summary || director.testimonial}"
+                      </blockquote>
+                    </div>
+
+                    <div className="w-full mt-auto pt-4">
+                      <Link href={`/mscer/${director.slug}`} className="block">
+                        <Button className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-2xl h-16 text-base font-bold shadow-lg shadow-blue-500/10 group-hover:shadow-blue-500/30 transition-all duration-300 gap-2 uppercase">
+                          Xem Hồ Sơ <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+
+                </CardContent>
+              </Card>
             </motion.div>
           ))}
         </div>

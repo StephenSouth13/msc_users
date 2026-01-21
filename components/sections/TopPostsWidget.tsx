@@ -23,7 +23,7 @@ export default function TopPostsWidget() {
                 <span className="text-sm font-bold text-white">{index + 1}</span>
               </div>
               <div className="flex-1">
-                <Link href={`/chia-se/${post.id}`}>
+                <Link href={`/tin-tuc/${post.id}`}>
                   <h4 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2 mb-2">
                     {post.title}
                   </h4>

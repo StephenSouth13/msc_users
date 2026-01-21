@@ -128,7 +128,7 @@ export default function NotFound() {
               <ArrowLeft className="mr-2 h-5 w-5" />
               Quay lại
             </Button>
-            <Link href="/chia-se">
+            <Link href="/tin-tuc">
               <Button size="lg" variant="outline" className="bg-transparent px-8 py-4">
                 <Search className="mr-2 h-5 w-5" />
                 Tìm kiếm

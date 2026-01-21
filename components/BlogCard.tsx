@@ -114,7 +114,7 @@ const BlogCard = ({ id, title, excerpt, image, authors, publishDate, category, s
         </CardContent>
 
         <CardFooter className="px-6 pb-6 pt-0">
-          <Link href={`/chia-se/${slug}`} className="w-full">
+          <Link href={`/tin-tuc/${slug}`} className="w-full">
             <Button className="w-full bg-[#095095] hover:bg-slate-900 text-white font-black rounded-xl h-12 shadow-lg shadow-blue-100 dark:shadow-none group/btn uppercase text-[10px] tracking-widest transition-all">
               Đọc bài viết
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-2" />

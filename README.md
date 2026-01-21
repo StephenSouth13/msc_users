@@ -180,7 +180,7 @@ msc-center-website/
 │   │   ├── 📁 auth/
 │   │   ├── 📁 blog/
 │   │   └── 📁 contact/
-│   ├── 📁 chia-se/                  # Blog pages
+│   ├── 📁 tin-tuc/                  # Blog pages
 │   │   ├── 📁 [slug]/               # Dynamic blog post
 │   │   └── 📁 category/
 │   ├── 📁 mentors/                  # Mentor pages

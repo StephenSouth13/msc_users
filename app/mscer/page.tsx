@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { Star, Award, Users, ArrowRight } from "lucide-react"
+import { Star, ArrowRight, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { api, MSCer } from "@/lib/api-supabase"
 
 export default function MSCerPage() {
@@ -18,164 +18,109 @@ export default function MSCerPage() {
       try {
         setLoading(true)
         const data = await api.getMSCer()
-        setMscers(data)
+        // Sắp xếp theo order để đảm bảo thứ tự như CMS
+        setMscers(data.sort((a, b) => (a.order || 0) - (b.order || 0)))
       } catch (error) {
-        console.error("Error fetching MSCers:", error)
+        console.error("❌ Error fetching MSCers:", error)
       } finally {
         setLoading(false)
       }
     }
-
     fetchMscers()
   }, [])
 
-  const successStats = [
-    { label: "MSCers trưởng thành từ MSC ", value: "5,000+", icon: Users },
-    { label: "Sự tham gia từ các trường Đại học và Cao đẳng", value: "100+", icon: Award },
-    { label: "Doanh nghiệp đối tác", value: "200+", icon: Star },
-  ]
-
-  const getTestimonial = (mscer: MSCer) => {
-    if (typeof mscer.content === 'object' && mscer.content !== null && 'testimonial' in mscer.content) {
-      return mscer.content.testimonial;
-    }
-    return 'Hành trình tại MSC đã mở ra cho tôi nhiều cơ hội mới.';
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Hero Section */}
-      <section className="py-24 bg-gradient-to-br from-blue-900 via-blue-800 to-teal-900 text-white">
-        <div className="container">
-          <motion.div 
-            className="text-center max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-block bg-white/10 p-4 rounded-full mb-6">
-              <Users className="h-12 w-12 text-white" />
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">ĐỘI NGŨ MSCERS</h1>
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-              Những gương mặt ưu tú đã trưởng thành từ MSC Center.
-            </p>
-          </motion.div>
-        </div>
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 pt-32 pb-24 font-sans">
+      {/* --- Header Section --- */}
+      <section className="container mx-auto px-6 mb-20 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-4 italic">
+            Đội ngũ MSCers
+          </h1>
+          <div className="w-24 h-1.5 bg-blue-600 mx-auto rounded-full mb-8"></div>
+          <p className="text-slate-500 dark:text-slate-400 font-medium text-lg max-w-2xl mx-auto">
+            Kết nối cùng chúng tôi thông qua các chương trình đào tạo và lộ trình phát triển năng lực chuyên sâu.
+          </p>
+        </motion.div>
       </section>
 
-      {/* Success Stats */}
-      <section className="py-20 bg-white dark:bg-gray-800">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {successStats.map((stat, index) => (
-              <motion.div 
-                key={index} 
-                className="text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-950 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <stat.icon className="h-8 w-8 text-blue-600 dark:text-blue-200" />
-                </div>
-                <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{stat.value}</div>
-                <p className="text-gray-600 dark:text-gray-300 text-lg">{stat.label}</p>
-              </motion.div>
-            ))}
+      {/* --- Grid Profiles --- */}
+      <section className="container mx-auto px-6">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-24">
+            <Loader2 className="animate-spin text-blue-600 mb-4" size={48} />
+            <p className="text-xs font-black uppercase tracking-widest text-slate-400">Đang tải dữ liệu học viên...</p>
           </div>
-        </div>
-      </section>
-
-      {/* MSCers Profiles Section */}
-      <section className="py-24 bg-gray-50 dark:bg-gray-900">
-        <div className="container">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">ĐỘI NGŨ MSCERS</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Những MSCers ưu tú và trưởng thành từ MSC Center.
-            </p>
-          </motion.div>
-
-          {loading ? (
-            <div className="text-center text-gray-500 dark:text-gray-400">Đang tải danh sách MSCer...</div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto items-stretch">
+            <AnimatePresence>
               {mscers.map((mscer, index) => (
                 <motion.div
                   key={mscer.id}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                  viewport={{ once: true }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -12 }}
+                  className="flex"
                 >
-                  <Card className="h-full flex flex-col group overflow-hidden bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 rounded-2xl text-center border dark:border-gray-700">
-                    <CardContent className="p-8 flex flex-col flex-grow items-center">
-                      <div className="relative mb-6">
-                        <Image
-                          src={mscer.avatar || '/MSCers/default.webp'}
-                          alt={mscer.name}
-                          width={128}
-                          height={128}
-                          className="rounded-full w-32 h-32 object-cover border-4 border-white dark:border-gray-700 shadow-lg"
-                        />
-                        <div className="absolute -bottom-2 -right-2 bg-gradient-to-br from-blue-500 to-teal-400 p-2 rounded-full shadow-md">
-                          <Star className="h-5 w-5 text-white fill-white" />
+                  <Card className="flex flex-col w-full border-none bg-white dark:bg-slate-900 rounded-[3rem] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_40px_80px_-20px_rgba(37,99,235,0.15)] transition-all duration-500 overflow-hidden group border border-slate-100 dark:border-slate-800">
+                    <CardContent className="p-10 md:p-12 flex flex-col items-center text-center h-full">
+                      
+                      {/* Avatar chuẩn mẫu với Star Badge xanh dương */}
+                      <div className="relative mb-10 shrink-0">
+                        <div className="relative w-44 h-44 rounded-full p-1 bg-white dark:bg-slate-800 shadow-xl overflow-hidden border border-slate-100">
+                          <Image
+                            src={mscer.avatar_url || '/MSCers/default.webp'}
+                            alt={mscer.full_name}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                        </div>
+                        {/* Ngôi sao Badge xanh dương chuẩn vị trí ảnh mẫu */}
+                        <div className="absolute bottom-2 right-2 bg-[#3b82f6] p-2.5 rounded-full border-[4px] border-white dark:border-slate-900 shadow-lg text-white">
+                          <Star size={18} className="fill-white" />
                         </div>
                       </div>
-                      
-                      <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">{mscer.name}</CardTitle>
-                      <p className="text-blue-600 dark:text-blue-400 font-semibold text-base mb-4">{mscer.position}</p>
-                      
-                      <blockquote className="text-base text-gray-600 dark:text-gray-300 italic leading-relaxed mb-6 flex-grow">
-                        "{getTestimonial(mscer)}"
-                      </blockquote>
-                      
-                      <div className="mt-auto w-full">
-                        <Button asChild className="w-full group-hover:bg-blue-700 transition-colors bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-600 dark:hover:bg-blue-700">
-                          <Link href={`/mscer/${mscer.id}`}>
-                            Xem Hồ Sơ
-                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+
+                      {/* Container thông tin - Dùng flex-grow để căn đều đáy */}
+                      <div className="w-full flex flex-col flex-grow">
+                        {/* Tên MSCer */}
+                        <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-3">
+                          {mscer.full_name}
+                        </h3>
+
+                        {/* Chức danh màu xanh dương */}
+                        <p className="text-[#3b82f6] font-extrabold text-lg uppercase tracking-wider mb-6">
+                          {mscer.position}
+                        </p>
+
+                        {/* Testimonial / Achievement Summary */}
+                        <div className="flex-grow flex items-center justify-center mb-10">
+                          <blockquote className="text-slate-600 dark:text-slate-400 text-base md:text-lg leading-relaxed italic font-medium">
+                            "{mscer.testimonial || mscer.achievement_summary}"
+                          </blockquote>
+                        </div>
+
+                        {/* Nút bấm chuẩn UI Blue Executive - Luôn thẳng hàng nhờ flex-grow */}
+                        <div className="w-full mt-auto">
+                          <Link href={`/mscer/${mscer.slug}`} className="block">
+                            <Button className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-2xl h-16 text-lg font-bold shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all duration-300 gap-2">
+                              Xem Hồ Sơ <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform" />
+                            </Button>
                           </Link>
-                        </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
                 </motion.div>
               ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Join MSCer Community Section */}
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-teal-600 text-white">
-        <div className="container text-center">
-           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-           >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">Viết nên câu chuyện của riêng bạn</h2>
-              <p className="text-xl text-blue-100 mb-10 max-w-3xl mx-auto">
-                Bắt đầu hành trình phát triển sự nghiệp cùng MSC Center và trở thành gương mặt thành công tiếp theo trong cộng đồng MSCer.
-              </p>
-              <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-10 py-6">
-                <Link href="/dao-tao">
-                  Khám phá các khóa học
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-           </motion.div>
-        </div>
+            </AnimatePresence>
+          </div>
+        )}
       </section>
     </div>
   )

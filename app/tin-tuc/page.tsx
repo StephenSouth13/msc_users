@@ -76,7 +76,7 @@ export default function BlogPage() {
       {/* FEATURED - Cinematic Article */}
       <section className="py-20 container px-4">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <Link href={`/chia-se/${featuredPost.slug}`}>
+          <Link href={`/tin-tuc/${featuredPost.slug}`}>
             <div className="relative group overflow-hidden rounded-[3.5rem] bg-slate-900 aspect-[21/9] shadow-2xl shadow-blue-900/20">
               <Image src={featuredPost.image || '/placeholder.jpg'} fill className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" alt="Cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent p-10 md:p-20 flex flex-col justify-end">
@@ -113,13 +113,13 @@ export default function BlogPage() {
             <h2 className="text-4xl font-black text-slate-900">Bài viết mới nhất</h2>
             <p className="text-slate-400 font-bold text-sm mt-2 uppercase tracking-widest">Cập nhật tri thức mỗi ngày</p>
           </div>
-          <Link href="/chia-se/all"><Button variant="ghost" className="font-black text-blue-600 hover:bg-blue-50">TẤT CẢ BÀI VIẾT <ArrowRight size={18} className="ml-2"/></Button></Link>
+          <Link href="/tin-tuc/all"><Button variant="ghost" className="font-black text-blue-600 hover:bg-blue-50">TẤT CẢ BÀI VIẾT <ArrowRight size={18} className="ml-2"/></Button></Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {recentPosts.map((post, index) => (
             <motion.div key={post.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} viewport={{ once: true }}>
-              <Link href={`/chia-se/${post.slug}`}>
+              <Link href={`/tin-tuc/${post.slug}`}>
                 <Card className="h-full flex flex-col group overflow-hidden rounded-[2.5rem] border-none bg-white shadow-lg hover:shadow-2xl transition-all duration-500">
                   <div className="relative aspect-video overflow-hidden">
                     <Image src={post.image || '/placeholder-image.jpg'} alt={post.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
