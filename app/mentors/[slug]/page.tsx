@@ -3,23 +3,22 @@
 import { useState, useEffect } from 'react'
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import {
-  ArrowLeft, Trophy, TrendingUp, Heart,
+import { 
+  ArrowLeft, Trophy, TrendingUp, Heart, 
   GraduationCap, Briefcase, Mail, Phone, Loader2, Wrench, Star, ExternalLink
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { api, Mentor } from "@/lib/api-supabase"
-import { mentorDetails, MentorDetail } from "@/data/mentor-detail"
+import { mentorDetails } from "@/data/mentor-detail"
 
-// Helper to convert MentorDetail to Mentor
-function convertToMentor(detail: MentorDetail): Mentor {
+function convertToMentor(detail: any): Mentor {
   return {
-    id: detail.id,
-    full_name: detail.name,
-    slug: detail.slug,
-    title: detail.title,
+    id: detail.id || "",
+    full_name: detail.name || "Unknown",
+    slug: detail.slug || "",
+    title: detail.title || "",
     description: detail.role || detail.bio || "",
     email: detail.personalInfo?.["Email"] || "",
     phone: detail.personalInfo?.["Điện thoại"] || "",
@@ -32,7 +31,7 @@ function convertToMentor(detail: MentorDetail): Mentor {
     awards: detail.awards || [],
     tech_business_achievements: detail.achievements || [],
     background: {
-      education: Array.isArray(detail.education)
+      education: Array.isArray(detail.education) 
         ? detail.education.map(e => typeof e === 'string' ? e : `${e.degree} - ${e.school} (${e.year})`).join("\n")
         : "",
       experience: detail.workHistory?.join("\n") || ""
@@ -46,45 +45,29 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchDetail = async () => {
+    const loadData = async () => {
       try {
-        setLoading(true)
-        // First try Supabase
-        let data = await api.getMentorBySlug(params.slug)
-
-        // If not found, fallback to local data
-        if (!data) {
-          console.log(`Mentor not found in Supabase, checking local data for slug: ${params.slug}`)
-          const localMentor = mentorDetails.find(m => m.slug === params.slug)
-          if (localMentor) {
-            console.log(`Found mentor in local data: ${localMentor.name}`)
-            data = convertToMentor(localMentor)
-          } else {
-            console.log(`Mentor not found in local data either`)
-          }
-        } else {
-          console.log(`Found mentor in Supabase: ${data.full_name}`)
-        }
-
-        if (data) {
-          console.log(`Setting mentor:`, data)
-          setMentor(data)
-        } else {
-          console.log(`No mentor data found, will show not found page`)
-        }
-      } catch (error) {
-        console.error("❌ Error fetching mentor:", error)
-        // Try fallback even if there's an error
+        // First try from local data
         const localMentor = mentorDetails.find(m => m.slug === params.slug)
         if (localMentor) {
-          console.log(`Fallback: Found mentor in local data: ${localMentor.name}`)
           setMentor(convertToMentor(localMentor))
+          setLoading(false)
+          return
         }
+
+        // Then try Supabase
+        const data = await api.getMentorBySlug(params.slug)
+        if (data) {
+          setMentor(data)
+        }
+      } catch (error) {
+        console.error("Error:", error)
       } finally {
         setLoading(false)
       }
     }
-    fetchDetail()
+
+    loadData()
   }, [params.slug])
 
   if (loading) return (
@@ -98,7 +81,6 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
   return (
     <div className="min-h-screen pt-20 bg-white dark:bg-gray-950 pb-20">
       <div className="container max-w-6xl mx-auto px-4">
-        {/* Back Button */}
         <Link href="/mentors" className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-600 font-bold text-xs mb-12 transition-all group">
           <ArrowLeft size={16} className="group-hover:-translate-x-2 transition-transform" /> 
           QUAY LẠI BAN GIẢNG HUẤN
@@ -106,18 +88,17 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
-          {/* LEFT COLUMN: PERSONAL INFO */}
+          {/* LEFT COLUMN */}
           <div className="lg:col-span-4 space-y-8">
-            {/* Profile Card */}
             <Card className="rounded-[3rem] border-none bg-gradient-to-br from-blue-600 to-blue-700 text-white p-10 relative overflow-hidden shadow-2xl shadow-blue-500/20">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
               <div className="relative z-10 text-center">
                 {/* Avatar */}
                 <div className="relative w-48 h-48 mx-auto mb-8">
-                  <img
-                    src={mentor.avatar_url || '/Mentors/default.webp'}
+                  <img 
+                    src={mentor.avatar_url} 
                     alt={mentor.full_name}
-                    className="w-full h-full rounded-full border-8 border-white/20 shadow-2xl object-cover"
+                    className="w-full h-full rounded-full border-8 border-white/20 shadow-2xl object-cover" 
                     onError={(e) => {
                       e.currentTarget.src = '/Mentors/default.webp'
                     }}
@@ -127,24 +108,26 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
                   </div>
                 </div>
                 
-                <h1 className="text-4xl font-black leading-tight mb-2 tracking-tighter">{mentor.full_name}</h1>
+                <h1 className="text-3xl font-black leading-tight mb-3 tracking-tighter">{mentor.full_name}</h1>
                 <p className="font-bold text-blue-100 uppercase text-[11px] tracking-[0.2em] mb-8">{mentor.title}</p>
                 
                 {/* Contact Info */}
-                <div className="space-y-3 text-sm mb-8">
-                  {mentor.email && (
-                    <div className="flex items-center gap-2 justify-center text-blue-100 hover:text-white transition-colors">
-                      <Mail size={14} />
-                      <a href={`mailto:${mentor.email}`} className="hover:underline">{mentor.email}</a>
-                    </div>
-                  )}
-                  {mentor.phone && (
-                    <div className="flex items-center gap-2 justify-center text-blue-100 hover:text-white transition-colors">
-                      <Phone size={14} />
-                      <a href={`tel:${mentor.phone}`} className="hover:underline">{mentor.phone}</a>
-                    </div>
-                  )}
-                </div>
+                {(mentor.email || mentor.phone) && (
+                  <div className="space-y-3 text-sm mb-8">
+                    {mentor.email && (
+                      <div className="flex items-center gap-2 justify-center text-blue-100">
+                        <Mail size={14} />
+                        <a href={`mailto:${mentor.email}`}>{mentor.email}</a>
+                      </div>
+                    )}
+                    {mentor.phone && (
+                      <div className="flex items-center gap-2 justify-center text-blue-100">
+                        <Phone size={14} />
+                        <a href={`tel:${mentor.phone}`}>{mentor.phone}</a>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <Button asChild className="w-full bg-white text-blue-600 hover:bg-blue-50 rounded-2xl font-black h-14 shadow-xl border-none">
                   <Link href="/lien-he">
@@ -161,9 +144,9 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
                   <Wrench size={14} className="text-blue-600" /> Chuyên môn
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {mentor.specialties.map((specialty: string) => (
-                    <Badge key={specialty} className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-none px-4 py-2 rounded-xl font-bold text-[11px]">
-                      {specialty}
+                  {mentor.specialties.map((s) => (
+                    <Badge key={s} className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-none px-4 py-2 rounded-xl font-bold text-[10px]">
+                      {s}
                     </Badge>
                   ))}
                 </div>
@@ -171,10 +154,9 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
             )}
           </div>
 
-          {/* RIGHT COLUMN: DETAILED CONTENT */}
+          {/* RIGHT COLUMN */}
           <div className="lg:col-span-8 space-y-12">
             
-            {/* Description */}
             {mentor.description && (
               <section className="bg-white dark:bg-gray-900 p-10 rounded-[3rem] shadow-sm border border-gray-100 dark:border-gray-800">
                 <h2 className="text-2xl font-black mb-8 flex items-center gap-3 italic text-blue-600 uppercase tracking-tighter">
@@ -190,7 +172,6 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
 
             {/* Education & Experience */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Education */}
               {mentor.background?.education && (
                 <section className="space-y-6">
                   <h3 className="text-xl font-black flex items-center gap-2 text-indigo-500 uppercase tracking-tighter">
@@ -204,7 +185,6 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
                 </section>
               )}
 
-              {/* Experience */}
               {mentor.background?.experience && (
                 <section className="space-y-6">
                   <h3 className="text-xl font-black flex items-center gap-2 text-emerald-500 uppercase tracking-tighter">
@@ -226,7 +206,7 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
                   <Trophy /> Dự án thực tiễn
                 </h2>
                 <div className="space-y-4">
-                  {mentor.practical_projects.map((project: string, i: number) => (
+                  {mentor.practical_projects.map((project, i) => (
                     <div key={i} className="p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex gap-4">
                       <span className="text-blue-600 font-black text-lg flex-shrink-0">0{i + 1}</span>
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{project}</p>
@@ -243,7 +223,7 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
                   <TrendingUp /> Dự án nghiên cứu
                 </h2>
                 <div className="space-y-4">
-                  {mentor.research_projects.map((project: string, i: number) => (
+                  {mentor.research_projects.map((project, i) => (
                     <div key={i} className="p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex gap-4">
                       <span className="text-purple-600 font-black text-lg flex-shrink-0">0{i + 1}</span>
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{project}</p>
@@ -260,7 +240,7 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
                   <Trophy className="fill-amber-600" /> Giải thưởng & Công nhận
                 </h2>
                 <div className="space-y-4">
-                  {mentor.awards.map((award: string, i: number) => (
+                  {mentor.awards.map((award, i) => (
                     <div key={i} className="p-5 bg-white dark:bg-gray-800 rounded-2xl border border-amber-100 dark:border-amber-800/30 shadow-sm flex gap-4">
                       <span className="text-amber-600 font-black text-lg flex-shrink-0">★</span>
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{award}</p>
@@ -271,13 +251,13 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
             )}
 
             {/* Organizations */}
-            {typeof mentor.organizations === 'string' && mentor.organizations && (
+            {mentor.organizations && (
               <section className="bg-gradient-to-br from-blue-600 to-indigo-600 p-12 rounded-[3.5rem] text-white shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32" />
                 <h2 className="text-2xl font-black mb-6 flex items-center gap-3 uppercase tracking-tighter relative z-10">
                   <Briefcase className="fill-white" /> Tổ chức công tác
                 </h2>
-                <p className="text-lg font-medium leading-relaxed italic relative z-10 opacity-95 whitespace-pre-line">
+                <p className="text-lg font-medium leading-relaxed italic relative z-10 opacity-95">
                   {mentor.organizations}
                 </p>
               </section>
