@@ -37,7 +37,7 @@ export default function MSCerPage() {
     : mscers
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950 pt-32 pb-24 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950 pt-32 pb-32 font-sans relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -126,23 +126,31 @@ export default function MSCerPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-24"
+            className="flex flex-col items-center justify-center py-32"
           >
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              className="mb-6"
             >
-              <Loader2 className="text-blue-600 mb-4" size={48} />
+              <Loader2 className="text-blue-600" size={56} />
             </motion.div>
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400">Đang tải dữ liệu chuyên gia...</p>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-sm font-black uppercase tracking-widest text-slate-400"
+            >
+              Đang tải dữ liệu chuyên gia...
+            </motion.p>
           </motion.div>
         ) : filteredMscers.length > 0 ? (
           <>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto items-stretch"
+              transition={{ duration: 0.4 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto items-stretch"
             >
               <AnimatePresence mode="popLayout">
                 {filteredMscers.map((mscer, index) => (
