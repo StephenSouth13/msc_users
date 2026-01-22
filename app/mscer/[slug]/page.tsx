@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react'
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { 
-  ArrowLeft, Trophy, TrendingUp, Heart, 
-  GraduationCap, Briefcase, FileText, Loader2, Wrench, Star 
+import { motion } from "framer-motion"
+import {
+  ArrowLeft, Trophy, TrendingUp, Heart,
+  GraduationCap, Briefcase, FileText, Loader2, Wrench, Star
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -42,13 +43,19 @@ export default function MSCerDetailPage({ params }: { params: { slug: string } }
   if (!mscer) notFound()
 
   return (
-    <div className="min-h-screen pt-24 bg-[#fcfcfc] dark:bg-slate-950 pb-20">
+    <div className="min-h-screen pt-24 bg-gradient-to-b from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950 pb-20">
       <div className="container max-w-6xl mx-auto px-4">
         {/* Nút quay lại xịn */}
-        <Link href="/mscer" className="inline-flex items-center gap-2 text-slate-400 hover:text-blue-600 font-bold text-xs mb-12 transition-all group">
-          <ArrowLeft size={16} className="group-hover:-translate-x-2 transition-transform" /> 
-          QUAY LẠI CỘNG ĐỒNG MSCERS
-        </Link>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Link href="/mscer" className="inline-flex items-center gap-2 text-slate-400 hover:text-blue-600 font-bold text-xs mb-12 transition-all group">
+            <ArrowLeft size={16} className="group-hover:-translate-x-2 transition-transform" />
+            QUAY LẠI CỘNG ĐỒNG MSCERS
+          </Link>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
