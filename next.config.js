@@ -17,7 +17,11 @@ const nextConfig = {
     ]
   },
   images: {
-    domains: ['res.cloudinary.com'],
+    // Thêm domain Supabase của bạn vào danh sách bên dưới
+    domains: [
+      'res.cloudinary.com', 
+      'yyqajxbkxiddfqnzkcmr.supabase.co' // <-- Domain Supabase lấy từ lỗi log của bạn
+    ],
     unoptimized: true,
   },
 }

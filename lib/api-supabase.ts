@@ -4,7 +4,7 @@ import { createBrowserClient } from '@supabase/ssr'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-export const supabase = createClient()
+
 /**
  * Khởi tạo Supabase Client cho Browser
  */
@@ -12,9 +12,25 @@ export function createClient() {
   return createBrowserClient(SUPABASE_URL!, SUPABASE_ANON_KEY!)
 }
 
+export const supabase = createClient()
+
+/**
+ * // // Nguồn: HÀM HELPER QUAN TRỌNG
+ * Hàm hỗ trợ lấy URL ảnh đầy đủ từ Supabase Storage.
+ * Nếu path là 'folder/image.png', hàm sẽ trả về link https://...
+ */
+const getPublicUrl = (path: string | null | undefined) => {
+  if (!path) return '/placeholder-avatar.jpg'; // Ảnh mặc định nếu dữ liệu rỗng
+  if (path.startsWith('http')) return path;    // Nếu đã là link web thì giữ nguyên
+  
+  // Trả về link public từ bucket 'media' 
+  // (Lưu ý: Nếu bạn đổi tên Bucket trong Supabase, hãy sửa chữ 'media' ở đây)
+  const { data } = supabase.storage.from('media').getPublicUrl(path);
+  return data.publicUrl;
+};
+
 // --- ĐỊNH NGHĨA TYPES (Data Models) ---
 
-// 1. Chuyên gia MSCer
 export interface MSCer {
   id: string;
   full_name: string;
@@ -36,30 +52,28 @@ export interface MSCer {
     education: string;
     previous_role: string;
     experience: string;
-
   };
   is_active: boolean;
   is_director: boolean;
   order?: number;
 }
 
-// 2. Ban Giảng Huấn (Mentor) - MỚI BỔ SUNG
 export interface Mentor {
   id: string;
   full_name: string;
   slug: string;
-  title: string;       // PGS.TS, CEO...
-  description: string; // Giới thiệu ngắn
+  title: string;
+  description: string;
   email: string;
   phone?: string;
   avatar_url: string;
-  organizations?:string;
+  organizations?: string;
   company?: string;
   specialties: string[];
-  practical_projects: string[]; // <--- Thêm dòng này
-  research_projects: string[];  // <--- Thêm dòng này
-  awards: string[];             // <--- Thêm dòng này
-  tech_business_achievements: string[]; // <--- Thêm dòng này 
+  practical_projects: string[];
+  research_projects: string[];
+  awards: string[];
+  tech_business_achievements: string[];
   background: {
     education: string;
     experience: string;
@@ -68,7 +82,6 @@ export interface Mentor {
   order?: number;
 }
 
-// 3. Khóa học (Program)
 export interface Program {
   id: string;
   title: string;
@@ -86,22 +99,44 @@ export interface Program {
   updated_at: string;
 }
 
-// 4. Dự án (Project)
 export interface Project {
   id: string;
   title: string;
   description: string;
   detailproject?: string; 
   image?: string;
+  video_url?: string;
+  hashtags?: string;
+  order_index?: number;
+  seo_title?: string;
   technologies?: string[];
-  mentor_ids?: string[]; // IDs của các mentor tham gia
-  mentors?: any[];       // Chứa data chi tiết sau khi fetch
+  featured?: boolean;
+  author_ids?: string[];
+  project_authors?: {
+    name: string;
+    avatar: string;
+    profile_link: string;
+    title?: string;
+  }[];
   status?: 'ongoing' | 'completed' | 'planning';
   slug: string;
   category?: string;
+  created_at?: string;
 }
 
-// 5. Tin tức (BlogPost)
+export interface UserData {
+  id: string;
+  email: string;
+  name: string;
+  fullName?: string;
+  avatar?: string;
+  phone?: string;
+  university?: string;
+  major?: string;
+  role?: string;
+  status?: string;
+}
+
 export interface BlogPost {
   id: string;
   title: string;
@@ -122,109 +157,145 @@ export interface BlogPost {
   views?: number;
 }
 
+// ==========================================
+// 1. QUẢN LÝ XÁC THỰC (AuthAPI)
+// ==========================================
+export const authAPI = {
+  getCurrentUser: async (): Promise<UserData | null> => {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) return null;
+    
+    return {
+      id: user.id,
+      email: user.email || '',
+      name: user.user_metadata?.full_name || user.email || 'Người dùng',
+      fullName: user.user_metadata?.full_name,
+      avatar: getPublicUrl(user.user_metadata?.avatar_url), // Xử lý avatar user
+      phone: user.user_metadata?.phone,
+      university: user.user_metadata?.university,
+      major: user.user_metadata?.major
+    };
+  },
 
-// --- API CLIENT OBJECT ---
+  login: async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    return {
+      success: !error,
+      data,
+      error: error?.message
+    };
+  },
 
+  logout: async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  },
+};
+
+// ==========================================
+// 2. QUẢN LÝ DỮ LIỆU (API)
+// ==========================================
 export const api = {
-  // ==========================================
-  // 1. QUẢN LÝ MSCERS
-  // ==========================================
   getMSCer: async (): Promise<MSCer[]> => {
     try {
-      const supabase = createClient();
       const { data, error } = await supabase
         .from('mscers')
         .select('*')
         .eq('is_active', true)
         .order('order', { ascending: true });
       if (error) throw error;
-      return data || [];
+      // Trả về kèm xử lý Public URL ảnh
+      return (data || []).map(m => ({ ...m, avatar_url: getPublicUrl(m.avatar_url) }));
     } catch (error) {
       console.error("❌ Error fetching MSCers:", error);
       return [];
     }
   },
 
-  getMSCerBySlug: async (slug: string): Promise<MSCer | null> => {
-    try {
-      const supabase = createClient();
-      const { data, error } = await supabase.from('mscers').select('*').eq('slug', slug).single();
-      if (error) return null;
-      return data as MSCer;
-    } catch (error) {
-      return null;
-    }
-  },
-
-  // ==========================================
-  // 2. QUẢN LÝ MENTORS (Ban Giảng Huấn) - MỚI BỔ SUNG
-  // ==========================================
   getMentors: async (): Promise<Mentor[]> => {
     try {
-      const supabase = createClient();
       const { data, error } = await supabase
         .from('mentors')
         .select('*')
         .eq('is_active', true)
         .order('order', { ascending: true });
       if (error) throw error;
-      return data || [];
+      return (data || []).map(m => ({ ...m, avatar_url: getPublicUrl(m.avatar_url) }));
     } catch (error) {
-      console.error("❌ Error fetching mentors:", error);
       return [];
     }
   },
 
-  getMentorBySlug: async (slug: string): Promise<Mentor | null> => {
-    try {
-      const supabase = createClient();
-      const { data, error } = await supabase.from('mentors').select('*').eq('slug', slug).single();
-      if (error) return null;
-      return data as Mentor;
-    } catch (error) {
-      return null;
-    }
-  },
-
-  // ==========================================
-  // 3. QUẢN LÝ DỰ ÁN
-  // ==========================================
   getProjects: async (): Promise<Project[]> => {
     try {
       const supabase = createClient();
-      const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
-      if (error) throw error;
-      return data || [];
+      
+      // 1. Fetch danh sách dự án (Ưu tiên order_index đã kéo thả ở Backend)
+      const { data: projects, error: pError } = await supabase
+        .from('projects')
+        .select('*')
+        .order('order_index', { ascending: true })
+        .order('created_at', { ascending: false });
+
+      if (pError) throw pError;
+
+      // 2. Fetch danh sách Authors (Bỏ cột 'type' vì DB thực tế không có)
+      const { data: authorsData } = await supabase
+        .from('authors')
+        .select('id, full_name, avatar_url, slug, title, position'); 
+
+      // 3. Mapping dữ liệu Project + Authors
+      const mappedProjects = projects.map((p: any) => {
+        const matched = authorsData?.filter(a => p.author_ids?.includes(a.id)) || [];
+        return {
+          ...p,
+          image: getPublicUrl(p.image), // Xử lý ảnh bìa dự án
+          project_authors: matched.map(a => ({
+            name: a.full_name,
+            avatar: getPublicUrl(a.avatar_url), // Xử lý avatar chuyên gia
+            profile_link: `/mentors/${a.slug}`, // Mặc định hướng về trang mentor
+            title: a.title || a.position
+          }))
+        };
+      });
+
+      return mappedProjects as Project[];
     } catch (error) {
+      console.error("❌ Error fetching projects:", error);
       return [];
     }
   },
 
   getProjectBySlug: async (slug: string): Promise<Project | null> => {
     try {
-      const supabase = createClient();
       const { data: project, error } = await supabase.from('projects').select('*').eq('slug', slug).single();
-      if (error) return null;
+      if (error || !project) return null;
 
-      if (project.mentor_ids && project.mentor_ids.length > 0) {
-        const { data: mentorsData } = await supabase
-          .from('mentors')
-          .select('id, full_name, avatar_url, slug, title')
-          .in('id', project.mentor_ids);
-        project.mentors = mentorsData || [];
+      if (project.author_ids && project.author_ids.length > 0) {
+        const { data: authorsData } = await supabase
+          .from('authors')
+          .select('id, full_name, avatar_url, slug, title, position')
+          .in('id', project.author_ids);
+        
+        project.project_authors = authorsData?.map(a => ({
+          name: a.full_name,
+          avatar: getPublicUrl(a.avatar_url),
+          profile_link: `/mentors/${a.slug}`,
+          title: a.title || a.position
+        })) || [];
       }
-      return project as Project;
+      // Trả về project kèm xử lý ảnh bìa
+      return { ...project, image: getPublicUrl(project.image) } as Project;
     } catch (error) {
       return null;
     }
   },
 
-  // ==========================================
-  // 4. QUẢN LÝ TIN TỨC (Blog)
-  // ==========================================
   getBlogPosts: async (): Promise<BlogPost[]> => {
     try {
-      const supabase = createClient();
       const { data, error } = await supabase.from('allblogposts').select('*').order('publish_date', { ascending: false });
       if (error) throw error;
       return (data || []).map((post: any) => ({
@@ -232,7 +303,8 @@ export const api = {
         id: post.id.toString(),
         authors: post.authors_details || [],
         publish_date: post.publish_date || post.created_at,
-        read_time: post.read_time || '5 phút đọc'
+        read_time: post.read_time || '5 phút đọc',
+        image: getPublicUrl(post.image)
       }));
     } catch (error) {
       return [];
@@ -241,7 +313,6 @@ export const api = {
 
   getBlogPostBySlug: async (slug: string): Promise<BlogPost | null> => {
     try {
-      const supabase = createClient();
       const { data, error } = await supabase.from('allblogposts').select('*').eq('slug', slug).single();
       if (error) return null;
       return {
@@ -249,49 +320,19 @@ export const api = {
         id: data.id.toString(),
         authors: data.authors_details || [],
         publish_date: data.publish_date || data.created_at,
-        read_time: data.read_time || '5 phút đọc'
+        read_time: data.read_time || '5 phút đọc',
+        image: getPublicUrl(data.image)
       } as BlogPost;
     } catch (error) {
       return null;
     }
   },
 
-  getBlogPostsByCategory: async (category: string): Promise<BlogPost[]> => {
-    try {
-      const supabase = createClient();
-      const { data, error } = await supabase.from('allblogposts').select('*').ilike('category', `%${category}%`).order('publish_date', { ascending: false });
-      if (error) throw error;
-      return (data || []).map((post: any) => ({
-        ...post,
-        authors: post.authors_details || [],
-        publish_date: post.publish_date || post.created_at,
-        read_time: post.read_time || '5 phút đọc'
-      }));
-    } catch (error) {
-      return [];
-    }
-  },
-
-  getTopPosts: async (): Promise<any[]> => {
-    try {
-      const supabase = createClient();
-      const { data, error } = await supabase.from('allblogposts').select('id, title, slug, image, views, category, publish_date, read_time').order('views', { ascending: false }).limit(5);
-      if (error) throw error;
-      return data || [];
-    } catch (error) {
-      return [];
-    }
-  },
-
-  // ==========================================
-  // 5. QUẢN LÝ KHÓA HỌC
-  // ==========================================
   getPrograms: async (): Promise<Program[]> => {
     try {
-      const supabase = createClient();
       const { data, error } = await supabase.from('programs').select('*').order('created_at', { ascending: false });
       if (error) throw error;
-      return data || [];
+      return (data || []).map(p => ({ ...p, image: getPublicUrl(p.image) }));
     } catch (error) {
       return [];
     }
