@@ -46,10 +46,10 @@ const NewsSection = () => {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-sm border border-blue-100 dark:border-blue-800">
             <Sparkles size={12} className="animate-pulse" /> Tri thức & Chia sẻ
           </div>
-          <h2 className="text-4xl md:text-6xl font-black mb-6 text-slate-900 dark:text-white font-serif tracking-tight">
-            Tin tức mới nhất
+          <h2 className="section-title mb-6 text-5xl md:text-6xl">
+            Tin Tức Mới Nhất
           </h2>
-          <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
+          <p className="section-description text-slate-500 dark:text-slate-400">
             Cập nhật những góc nhìn chuyên sâu và giải pháp đào tạo đột phá từ đội ngũ chuyên gia MSC.
           </p>
         </motion.div>
