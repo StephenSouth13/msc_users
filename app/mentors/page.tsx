@@ -9,6 +9,33 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { api, Mentor } from "@/lib/api-supabase"
+import { mentorDetails } from "@/data/mentor-detail"
+
+// Helper to convert mentorDetails to Mentor
+function convertToMentor(detail: any): Mentor {
+  return {
+    id: detail.id,
+    full_name: detail.name,
+    slug: detail.slug,
+    title: detail.title,
+    description: detail.role || detail.bio || "",
+    email: detail.personalInfo?.["Email"] || "",
+    phone: detail.personalInfo?.["Điện thoại"] || "",
+    avatar_url: detail.avatar || "/Mentors/default.webp",
+    organizations: detail.organization?.join(", ") || "",
+    company: detail.organization?.[0] || "",
+    specialties: detail.subjects || [],
+    practical_projects: detail.practicalWorks || [],
+    research_projects: detail.researchProjects || [],
+    awards: detail.awards || [],
+    tech_business_achievements: detail.achievements || [],
+    background: {
+      education: "",
+      experience: ""
+    },
+    is_active: true
+  }
+}
 
 export default function MentorsPage() {
   const [activeTab, setActiveTab] = useState('faculty')
@@ -20,9 +47,20 @@ export default function MentorsPage() {
       try {
         setLoading(true)
         const data = await api.getMentors()
-        setMentors(data.sort((a, b) => (a.order || 0) - (b.order || 0)))
+
+        // If Supabase is empty, use local data
+        if (data && data.length > 0) {
+          setMentors(data.sort((a, b) => (a.order || 0) - (b.order || 0)))
+        } else {
+          // Fallback to local data
+          const localMentors = mentorDetails.map(convertToMentor)
+          setMentors(localMentors)
+        }
       } catch (error) {
         console.error("❌ Error fetching mentors:", error)
+        // Fallback to local data on error
+        const localMentors = mentorDetails.map(convertToMentor)
+        setMentors(localMentors)
       } finally {
         setLoading(false)
       }
