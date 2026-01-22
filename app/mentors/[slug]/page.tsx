@@ -114,11 +114,13 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
               <div className="relative z-10 text-center">
                 {/* Avatar */}
                 <div className="relative w-48 h-48 mx-auto mb-8">
-                  <Image 
-                    src={mentor.avatar_url || '/Mentors/default.webp'} 
-                    fill 
-                    className="rounded-full border-8 border-white/20 shadow-2xl object-cover" 
-                    alt={mentor.full_name} 
+                  <img
+                    src={mentor.avatar_url || '/Mentors/default.webp'}
+                    alt={mentor.full_name}
+                    className="w-full h-full rounded-full border-8 border-white/20 shadow-2xl object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = '/Mentors/default.webp'
+                    }}
                   />
                   <div className="absolute bottom-2 right-2 bg-amber-400 p-3 rounded-full border-4 border-blue-600 shadow-xl">
                     <Star size={18} className="fill-white text-white" />
