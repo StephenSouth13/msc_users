@@ -58,15 +58,8 @@ export default function BlogPage() {
     setFilteredPosts(filtered)
   }, [allBlogPosts, selectedCategory, sortBy])
 
-  const featuredPost = allBlogPosts[0]
-  const recentPosts = allBlogPosts.slice(1)
-
-  const stats = [
-    { label: "Bài viết chuyên môn", value: "50+", icon: BookOpen },
-    { label: "Lượt đọc hàng tháng", value: "10K+", icon: Eye },
-    { label: "Chuyên gia đóng góp", value: "10+", icon: User },
-    { label: "Lĩnh vực chia sẻ", value: "8+", icon: TrendingUp },
-  ]
+  const featuredPost = filteredPosts[0] || allBlogPosts[0]
+  const displayPosts = selectedCategory ? filteredPosts : filteredPosts.slice(0)
 
   if (loading) return (
     <div className="min-h-screen bg-white pt-20 flex items-center justify-center">
