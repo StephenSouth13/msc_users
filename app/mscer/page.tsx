@@ -163,9 +163,14 @@ export default function MSCerPage() {
                     layout
                     className="flex"
                   >
-                    <Card className="flex flex-col w-full border-none bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden group relative border border-slate-200/50 dark:border-slate-700/50">
+                    <Card className="flex flex-col w-full border-none bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden group relative border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm">
                       {/* Decorative top accent */}
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <motion.div
+                        className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        layoutId="accent"
+                      />
+                      {/* Gloss effect overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-3xl pointer-events-none"></div>
 
                       <CardContent className="p-8 md:p-10 flex flex-col items-center text-center h-full">
 
