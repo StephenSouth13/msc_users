@@ -10,6 +10,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { api, Mentor } from "@/lib/api-supabase"
 import { mentorDetails } from "@/data/mentor-detail"
+import PageBanner from "@/components/sections/PageBanner"
 
 // Helper to convert mentorDetails to Mentor
 function convertToMentor(detail: any): Mentor {
@@ -100,60 +101,18 @@ export default function MentorsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-      
-      {/* ===== HERO SECTION: PROFESSIONAL LEADERSHIP ===== */}
-      <section className="relative py-32 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white overflow-hidden">
-        
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-pulse" />
-        </div>
-
-        <div className="container relative z-10 mx-auto px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Badge className="bg-blue-500/20 text-blue-200 border-blue-400/30 px-6 py-2 rounded-full mb-8 uppercase text-[11px] font-black tracking-[0.3em]">
-                ✨ Lãnh đạo & Chuyên gia Hàng đầu
-              </Badge>
-
-              <h1 className="text-6xl md:text-8xl font-black mb-8 tracking-tighter uppercase leading-none">
-                Ban <span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">Giảng</span> Huấn
-              </h1>
-
-              <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto font-medium leading-relaxed italic mb-12">
-                "Nơi hội tụ những nhà lãnh đạo, chuyên gia đầu ngành mang tâm thế phụng sự và khát vọng chuyển giao tri thức"
-              </p>
-
-              {/* Statistics Row */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-white/10 pt-12">
-                {[
-                  { value: '20+', label: 'Chuyên gia Hàng đầu' },
-                  { value: '15+', label: 'Năm Kinh nghiệm TB' },
-                  { value: '1000+', label: 'Học viên Đạo tạo' },
-                  { value: '100%', label: 'Tâm Huyết Dạy dỗ' },
-                ].map((stat, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 + idx * 0.1 }}
-                    className="text-center"
-                  >
-                    <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent mb-2">{stat.value}</div>
-                    <div className="text-xs md:text-sm text-blue-200 uppercase tracking-widest font-bold">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+    <div className="bg-white dark:bg-gray-950">
+      <PageBanner
+        badge="Lãnh đạo & Chuyên gia hàng đầu"
+        title="Ban Giảng Huấn"
+        subtitle="Nơi hội tụ những nhà lãnh đạo, chuyên gia đầu ngành mang tâm thế phụng sự và khát vọng chuyển giao tri thức"
+        stats={[
+          { value: '20+', label: 'Chuyên gia hàng đầu' },
+          { value: '15+', label: 'Năm kinh nghiệm' },
+          { value: '1000+', label: 'Học viên' },
+          { value: '100%', label: 'Tâm huyết' },
+        ]}
+      />
 
       {/* ===== STICKY TAB NAVIGATION ===== */}
       <section className="sticky top-[72px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl z-30 border-b border-gray-200 dark:border-gray-800 shadow-lg">
