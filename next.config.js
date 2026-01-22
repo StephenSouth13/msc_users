@@ -28,7 +28,7 @@ const nextConfig = {
     return [
       {
         // NGUỒN: Link cũ hoặc link cấu trúc dài mà bạn muốn bỏ
-        source: '/mscer/cv/dtk/dtk',
+        source: '/cv/dtk/dtk',
         // ĐÍCH: Link đẹp đã in trên Card Visit của bạn
         destination: '/mscer/duong-the-khai',
         // permanent: true trả về mã lỗi 301 (Chuyển hướng vĩnh viễn), rất tốt cho SEO
