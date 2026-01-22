@@ -1,214 +1,239 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { notFound } from "next/navigation"
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence, Variants } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { 
-  ArrowLeft, GraduationCap, Briefcase, Award, 
-  Loader2, Star, BookOpen, Quote, Trophy, Rocket, 
-  Building2, Wrench, Lightbulb, MapPin, Mail, ChevronRight, Globe, Linkedin
-} from "lucide-react"
+import { Users, BookOpen, ChevronRight, GraduationCap, Briefcase, Sparkles, Loader2, Award, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { api, Mentor } from "@/lib/api-supabase"
 
-export default function MentorDetailPage({ params }: { params: { slug: string } }) {
-  const [mentor, setMentor] = useState<Mentor | null>(null)
+export default function MentorsPage() {
+  const [activeTab, setActiveTab] = useState('faculty')
+  const [mentors, setMentors] = useState<Mentor[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchDetail = async () => {
+    const fetchMentors = async () => {
       try {
         setLoading(true)
-        const data = await api.getMentorBySlug(params.slug)
-        if (data) setMentor(data)
+        const data = await api.getMentors()
+        setMentors(data.sort((a, b) => (a.order || 0) - (b.order || 0)))
       } catch (error) {
         console.error("❌ Error:", error)
       } finally {
         setLoading(false)
       }
     }
-    fetchDetail()
-  }, [params.slug])
+    fetchMentors()
+  }, [])
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <Loader2 className="h-12 w-12 text-blue-600 animate-spin" />
-    </div>
-  )
+  const teachingMethods = [
+    { 
+      icon: GraduationCap, 
+      title: "10% - Học tập chính quy", 
+      text: "Nắm vững kiến thức nền tảng và các mô hình quản trị tiên tiến thông qua bài giảng chuyên sâu từ các chuyên gia.",
+      color: "from-blue-600 to-indigo-600"
+    },
+    { 
+      icon: Users, 
+      title: "20% - Học hỏi xã hội", 
+      text: "Tương tác, thảo luận và nhận sự dẫn dắt (mentoring) trực tiếp từ những người đi trước giàu kinh nghiệm.",
+      color: "from-teal-500 to-emerald-500"
+    },
+    { 
+      icon: Briefcase, 
+      title: "70% - Học qua trải nghiệm", 
+      text: "Áp dụng kiến thức vào dự án thực tế, giải quyết các bài toán doanh nghiệp để hình thành năng lực thực chiến.",
+      color: "from-orange-500 to-red-500"
+    }
+  ]
 
-  if (!mentor) notFound()
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  }
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 pb-24">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       
-      {/* 1. HERO HEADER SECTION */}
-      <section className="bg-slate-900 pt-32 pb-24 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent" />
-        <div className="container max-w-7xl mx-auto px-6 relative z-10">
-          <Link href="/mentors" className="inline-flex items-center gap-2 text-slate-500 hover:text-blue-400 font-black text-[10px] tracking-[0.3em] mb-12 transition-all group uppercase">
-            <ArrowLeft size={14} className="group-hover:-translate-x-2 transition-transform" /> Quay lại Ban Giảng Huấn
-          </Link>
-          
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
-            <div className="max-w-3xl">
-              <Badge className="bg-blue-600 text-white border-none px-5 py-1.5 rounded-full font-black text-[10px] tracking-[0.2em] mb-8 uppercase shadow-lg shadow-blue-600/20">
-                {mentor.title}
-              </Badge>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-6 italic">
-                {mentor.full_name}
-              </h1>
-              <div className="flex flex-wrap gap-8 text-slate-400 font-bold text-xs uppercase tracking-widest">
-                <span className="flex items-center gap-2 text-blue-400"><MapPin size={16}/> TP. Hồ Chí Minh</span>
-                <span className="flex items-center gap-2"><Mail size={16}/> {mentor.email || 'contact@msc.edu.vn'}</span>
+      {/* --- HERO SECTION: ĐỒNG BỘ GIAO DIỆN TRANG ĐÀO TẠO --- */}
+      <section className="py-20 bg-gradient-to-br from-blue-900 via-blue-800 to-teal-900 text-white relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            <motion.h1 
+              className="text-5xl md:text-7xl font-bold mb-6 font-serif tracking-tight uppercase"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+            >
+              Ban Giảng Huấn
+            </motion.h1>
+            <motion.p 
+              className="text-xl text-blue-100 mb-10 leading-relaxed italic"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              "Nơi hội tụ những nhà lãnh đạo, chuyên gia đầu ngành mang tâm thế phụng sự và khát vọng chuyển giao tri thức."
+            </motion.p>
+
+            {/* Statistics Row - Giống UI trang Đào tạo */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-white/10 pt-10">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-teal-300">20+</div>
+                <div className="text-sm text-blue-200 uppercase tracking-widest font-bold">Chuyên gia</div>
               </div>
-            </div>
-            <div className="flex gap-4 pb-2">
-               <Button asChild size="lg" className="rounded-2xl bg-white text-slate-900 hover:bg-blue-50 font-black px-10 h-16 shadow-2xl border-none transition-transform hover:-translate-y-1">
-                  <Link href="/lien-he">KẾT NỐI MENTORING <ChevronRight className="ml-2" size={18}/></Link>
-               </Button>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-teal-300">15+</div>
+                <div className="text-sm text-blue-200 uppercase tracking-widest font-bold">Năm kinh nghiệm</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-teal-300">100%</div>
+                <div className="text-sm text-blue-200 uppercase tracking-widest font-bold">Tâm huyết</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-teal-300">Top-tier</div>
+                <div className="text-sm text-blue-200 uppercase tracking-widest font-bold">Chuyên môn</div>
+              </div>
             </div>
           </div>
         </div>
+        
+        {/* Decorative Elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl -ml-20 -mb-20"></div>
       </section>
 
-      {/* 2. MAIN CONTENT GRID */}
-      <div className="container max-w-7xl mx-auto px-6 -mt-16 relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          
-          {/* CỘT TRÁI: FIXED INFO (Sticky on Laptop) */}
-          <aside className="lg:col-span-4 space-y-10">
-            <div className="sticky top-32 space-y-10">
-              {/* Profile Image */}
-              <div className="relative aspect-[4/5] rounded-[3.5rem] overflow-hidden shadow-2xl border-8 border-white dark:border-slate-900 bg-slate-200 group">
-                 <Image src={mentor.avatar_url || '/Mentors/default.webp'} fill className="object-cover transition-transform duration-700 group-hover:scale-110" alt={mentor.full_name} />
-              </div>
+      {/* --- STICKY TABS: ĐIỀU HƯỚNG --- */}
+      <section className="sticky top-[72px] bg-white/95 dark:bg-gray-900/95 backdrop-blur-md z-30 border-b border-gray-100 dark:border-gray-800 shadow-sm">
+        <div className="container mx-auto py-4 flex justify-center gap-3 md:gap-4 px-4 overflow-x-auto">
+          {[
+            { id: 'faculty', label: 'Ban Giảng Huấn', icon: Users },
+            { id: 'methods', label: 'Phương pháp 70-20-10', icon: BookOpen },
+            { id: 'successors', label: 'Phát triển Kế thừa', icon: Sparkles },
+          ].map((tab) => (
+            <Button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              variant={activeTab === tab.id ? 'default' : 'ghost'}
+              className={`rounded-xl px-6 h-11 font-bold uppercase text-[11px] tracking-wider transition-all duration-300 ${
+                activeTab === tab.id 
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+                : 'text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-400'
+              }`}
+            >
+              <tab.icon className="mr-2 h-4 w-4" /> {tab.label}
+            </Button>
+          ))}
+        </div>
+      </section>
 
-              {/* Core Specialties */}
-              <div className="bg-white dark:bg-slate-900 p-10 rounded-[3rem] shadow-sm border border-slate-100 dark:border-white/5">
-                <h3 className="font-black uppercase text-[11px] text-slate-400 tracking-[0.3em] mb-8 flex items-center gap-3">
-                  <Wrench size={16} className="text-blue-600" /> Chuyên môn đào tạo
-                </h3>
-                <div className="flex flex-wrap gap-3">
-                  {mentor.specialties?.map((spec, i) => (
-                    <Badge key={i} className="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-none px-5 py-2.5 rounded-xl font-bold text-[11px]">
-                      {spec}
-                    </Badge>
+      <main className="container mx-auto py-20 px-4">
+        <AnimatePresence mode="wait">
+          
+          {/* TAB: BAN GIẢNG HUẤN (GRID MENTORS) */}
+          {activeTab === 'faculty' && (
+            <motion.div key="faculty" variants={containerVariants} initial="hidden" animate="visible" exit={{ opacity: 0 }}>
+              {loading ? (
+                <div className="flex flex-col items-center py-20">
+                  <Loader2 className="animate-spin text-blue-600 h-10 w-10 mb-4" />
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Đang kết nối danh sách chuyên gia...</span>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                  {mentors.map((mentor) => (
+                    <motion.div key={mentor.id} variants={itemVariants}>
+                      <Card className="h-full flex flex-col group bg-white dark:bg-gray-800 border-none shadow-xl hover:shadow-2xl transition-all duration-500 rounded-[2.5rem] overflow-hidden text-center border-gray-100">
+                        <CardContent className="p-10 flex flex-col items-center h-full">
+                          {/* Avatar Executive Style */}
+                          <div className="relative w-44 h-44 mb-8">
+                            <div className="absolute inset-0 rounded-full border-[6px] border-gray-50 dark:border-gray-700 shadow-xl overflow-hidden bg-white">
+                              <Image 
+                                src={mentor.avatar_url || "/Mentors/default.webp"} 
+                                alt={mentor.full_name} fill 
+                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                              />
+                            </div>
+                            <div className="absolute bottom-1 right-1 bg-blue-600 p-2.5 rounded-full border-4 border-white dark:border-gray-800 shadow-lg">
+                              <Star size={14} className="fill-white text-white" />
+                            </div>
+                          </div>
+
+                          <CardTitle className="text-2xl font-black text-gray-900 dark:text-white mb-3 tracking-tight group-hover:text-blue-600 transition-colors uppercase">
+                            {mentor.full_name}
+                          </CardTitle>
+                          
+                          <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-none px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+                            {mentor.title}
+                          </Badge>
+
+                          <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-10 leading-relaxed italic line-clamp-3 px-2">
+                            "{mentor.organizations?.[0] || mentor.description}"
+                          </p>
+
+                          <div className="w-full mt-auto">
+                            <Link href={`/mentors/${mentor.slug}`}>
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-14 rounded-2xl shadow-lg shadow-blue-500/20 transition-all gap-2 group/btn">
+                                CHI TIẾT HỒ SƠ <ChevronRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                              </Button>
+                            </Link>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
                   ))}
                 </div>
-              </div>
+              )}
+            </motion.div>
+          )}
 
-              {/* Social Connect */}
-              <div className="flex gap-4">
-                 <Button variant="outline" className="flex-1 h-14 rounded-2xl border-slate-200 hover:bg-blue-50 hover:text-blue-600 font-bold gap-2">
-                    <Linkedin size={18} /> LinkedIn
-                 </Button>
-                 <Button variant="outline" className="w-14 h-14 rounded-2xl border-slate-200 hover:bg-slate-50">
-                    <Globe size={18} />
-                 </Button>
+          {/* TAB: PHƯƠNG PHÁP (MÔ HÌNH 70-20-10) */}
+          {activeTab === 'methods' && (
+            <motion.div key="methods" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold text-gray-900 dark:text-white uppercase tracking-tight mb-4 font-serif">Mô hình đào tạo chuẩn quốc tế</h2>
+                <p className="text-gray-500 text-lg max-w-2xl mx-auto">Chúng tôi áp dụng mô hình 70-20-10 để tối ưu hóa khả năng hấp thụ tri thức.</p>
               </div>
-            </div>
-          </aside>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {teachingMethods.map((item, idx) => (
+                  <Card key={idx} className="border-none bg-gray-50 dark:bg-gray-800 rounded-[2.5rem] p-10 shadow-sm hover:shadow-xl transition-all duration-500 text-center group">
+                    <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br ${item.color} flex items-center justify-center mx-auto mb-8 shadow-lg group-hover:rotate-6 transition-transform`}>
+                      <item.icon className="text-white w-10 h-10" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 uppercase">{item.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">{item.text}</p>
+                  </Card>
+                ))}
+              </div>
+            </motion.div>
+          )}
 
-          {/* CỘT PHẢI: SCROLLING DETAILS */}
-          <main className="lg:col-span-8 space-y-12 lg:pt-16">
-            
-            {/* Quote / Philosophy */}
-            <section className="relative p-12 md:p-16 bg-blue-600 rounded-[3.5rem] text-white shadow-2xl shadow-blue-600/20 overflow-hidden">
-              <Quote className="text-white/10 absolute top-10 right-10 w-32 h-32 rotate-12" />
-              <div className="relative z-10">
-                <h2 className="text-[10px] font-black uppercase tracking-[0.4em] mb-8 opacity-60">Triết lý giảng huấn</h2>
-                <p className="text-2xl md:text-4xl font-medium leading-[1.3] italic tracking-tight">
-                  "{mentor.description}"
+          {/* TAB: NHÂN SỰ KẾ THỪA */}
+          {activeTab === 'successors' && (
+             <motion.div key="successors" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-4xl mx-auto py-12">
+                <div className="bg-blue-600 w-20 h-20 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-xl">
+                  <Sparkles className="text-white w-10 h-10 animate-pulse" />
+                </div>
+                <h2 className="text-4xl font-bold mb-6 uppercase tracking-tight text-gray-900 dark:text-white font-serif">Phát triển tài năng kế thừa</h2>
+                <p className="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-10 italic">
+                  "Chương trình chiến lược nhằm phát hiện, bồi dưỡng và đồng hành cùng thế hệ lãnh đạo trẻ, định hướng trở thành những nhân sự cốt cán trong hệ sinh thái MSC Center."
                 </p>
-              </div>
-            </section>
+                <Link href="/lien-he">
+                  <Button size="lg" className="rounded-full px-12 h-14 bg-gray-900 hover:bg-blue-600 text-white font-bold uppercase text-xs tracking-widest transition-all">Nhận tư vấn lộ trình</Button>
+                </Link>
+             </motion.div>
+          )}
 
-            {/* Organizations Grid */}
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <div className="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-slate-100 dark:border-white/5 flex flex-col justify-center">
-                  <h3 className="text-xl font-black flex items-center gap-3 text-indigo-500 uppercase tracking-tighter mb-8 italic">
-                    <GraduationCap size={24} /> Nền tảng học vấn
-                  </h3>
-                  <div className="text-sm leading-relaxed font-medium text-slate-500 whitespace-pre-line">
-                    {mentor.background?.education}
-                  </div>
-               </div>
-               <div className="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-slate-100 dark:border-white/5 flex flex-col justify-center">
-                  <h3 className="text-xl font-black flex items-center gap-3 text-emerald-500 uppercase tracking-tighter mb-8 italic">
-                    <Briefcase size={24} /> Kinh nghiệm công tác
-                  </h3>
-                  <div className="text-sm leading-relaxed font-medium text-slate-500 whitespace-pre-line">
-                    {mentor.background?.experience}
-                  </div>
-               </div>
-            </section>
-
-            {/* Research & Practical Work (Tab-like design) */}
-            <section className="space-y-8">
-               <div className="flex items-center gap-4">
-                  <h3 className="text-3xl font-black uppercase tracking-tighter">Hoạt động <span className="text-blue-600">thực chiến</span></h3>
-                  <div className="h-1 flex-grow bg-slate-100 dark:bg-white/5 rounded-full" />
-               </div>
-               
-               <div className="space-y-6">
-                  <div className="p-10 bg-slate-900 rounded-[3.5rem] text-white relative overflow-hidden">
-                    <Rocket className="absolute -bottom-10 -right-10 w-48 h-48 text-white/5" />
-                    <h4 className="text-amber-400 font-black uppercase text-[10px] tracking-[0.3em] mb-10">Công trình áp dụng thực tiễn</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       {mentor.practical_projects?.map((item, i) => (
-                         <div key={i} className="flex gap-4 items-start p-5 bg-white/5 rounded-2xl border border-white/5">
-                            <span className="text-blue-500 font-black text-xs">0{i+1}</span>
-                            <p className="text-sm font-bold text-slate-300">{item}</p>
-                         </div>
-                       ))}
-                    </div>
-                  </div>
-
-                  <div className="p-10 bg-white dark:bg-slate-900 rounded-[3.5rem] border border-slate-100 dark:border-white/5">
-                    <h4 className="text-purple-500 font-black uppercase text-[10px] tracking-[0.3em] mb-10">Dự án & Đề tài nghiên cứu</h4>
-                    <div className="space-y-4">
-                       {mentor.research_projects?.map((item, i) => (
-                         <div key={i} className="flex items-center gap-4 text-slate-600 dark:text-slate-400 group">
-                            <div className="w-1.5 h-1.5 rounded-full bg-purple-500 transition-all group-hover:scale-150 shrink-0" />
-                            <p className="text-sm font-medium">{item}</p>
-                         </div>
-                       ))}
-                    </div>
-                  </div>
-               </div>
-            </section>
-
-            {/* Recognition & Awards */}
-            <section className="bg-white dark:bg-slate-900 p-12 rounded-[4rem] shadow-sm border border-slate-100 dark:border-white/5">
-               <div className="flex justify-between items-center mb-12">
-                  <h3 className="text-2xl font-black uppercase tracking-tighter flex items-center gap-4">
-                    <Trophy className="text-amber-500" size={32} /> Giải thưởng vinh danh
-                  </h3>
-               </div>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {mentor.awards?.map((award, i) => (
-                    <div key={i} className="flex gap-5 items-start">
-                       <div className="p-3 bg-amber-50 rounded-2xl text-amber-500"><Award size={20} /></div>
-                       <p className="text-base font-bold text-slate-700 dark:text-slate-300 leading-snug pt-1">{award}</p>
-                    </div>
-                  ))}
-               </div>
-            </section>
-
-            {/* Bottom Connect CTA */}
-            <section className="p-12 bg-slate-100 dark:bg-white/5 rounded-[3.5rem] text-center">
-               <Building2 className="mx-auto mb-6 text-slate-400" size={40} />
-               <h3 className="text-xl font-black mb-4 uppercase tracking-tight">Thành viên Ban Giảng Huấn MSC Center</h3>
-               <p className="text-slate-500 dark:text-slate-400 text-sm max-w-lg mx-auto leading-relaxed">
-                 Đóng góp trực tiếp vào việc xây dựng lộ trình phát triển năng lực và chuyển giao tri thức cho cộng đồng nhân sự kế thừa.
-               </p>
-            </section>
-
-          </main>
-        </div>
-      </div>
+        </AnimatePresence>
+      </main>
     </div>
   )
 }

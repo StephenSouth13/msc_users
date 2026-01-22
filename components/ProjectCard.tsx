@@ -15,15 +15,15 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
-  // Xử lý logic Mentor Đỉnh cao
-  const mentors = project.mentors || [];
-  const maxDisplay = 3; // Hiện tối đa 3 ảnh xếp chồng
+  // FIX LỖI 2339: Đổi từ project.mentors sang project.project_authors 
+  const mentors = project.project_authors || [];
+  const maxDisplay = 3; 
   const displayMentors = mentors.slice(0, maxDisplay);
   const remainingCount = mentors.length - maxDisplay;
 
   return (
     <Card className="h-full flex flex-col overflow-hidden rounded-[2rem] border-none shadow-sm hover:shadow-2xl transition-all duration-500 group bg-white dark:bg-neutral-800">
-      {/* 1. PHẦN ẢNH DỰ ÁN - TỈ LỆ VÀNG */}
+      {/* 1. PHẦN ẢNH DỰ ÁN */}
       <CardHeader className="p-0">
         <div className="relative aspect-[16/10] overflow-hidden">
           <Image
@@ -50,22 +50,22 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {project.description}
         </p>
         
-        {/* 3. PHẦN ĐỘI NGŨ MENTOR - CHỐNG CHEN HÀNG TUYỆT ĐỐI */}
+        {/* 3. PHẦN ĐỘI NGŨ MENTOR */}
         <div className="mt-auto pt-6 border-t border-slate-50 dark:border-neutral-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {/* Avatar Stack Logic */}
+              {/* Avatar Stack */}
               <div className="flex -space-x-3 items-center">
-                {displayMentors.map((mentor, i) => (
+                {/* FIX LỖI 7006: Định nghĩa kiểu dữ liệu cho mentor và i */}
+                {displayMentors.map((mentor, i: number) => (
                   <Avatar key={i} className="h-10 w-10 border-2 border-white dark:border-neutral-800 shadow-md transition-transform hover:-translate-y-1 hover:z-30 cursor-pointer">
-                    <AvatarImage src={mentor.avatar_url} className="object-cover" />
+                    <AvatarImage src={mentor.avatar} className="object-cover" />
                     <AvatarFallback className="text-[10px] font-black bg-blue-50 text-blue-600">
-                      {mentor.full_name?.charAt(0)}
+                      {mentor.name?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                 ))}
 
-                {/* Nút +n (Mở danh sách ẩn) */}
                 {remainingCount > 0 && (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -79,14 +79,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                         <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Đội ngũ chuyên gia</span>
                       </div>
                       <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                        {mentors.map((m, idx) => (
-                          <Link key={idx} href={`/mentors/${m.slug}`} className="flex items-center gap-3 group/item">
+                        {/* FIX LỖI 7006: Định nghĩa kiểu dữ liệu cho m và idx */}
+                        {mentors.map((m, idx: number) => (
+                          <Link key={idx} href={m.profile_link || "#"} className="flex items-center gap-3 group/item">
                             <Avatar className="h-9 w-9 shadow-sm group-hover/item:scale-110 transition-transform">
-                              <AvatarImage src={m.avatar_url} />
-                              <AvatarFallback className="font-bold">{m.full_name?.[0]}</AvatarFallback>
+                              <AvatarImage src={m.avatar} />
+                              <AvatarFallback className="font-bold">{m.name?.[0]}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col">
-                              <span className="text-sm font-black text-slate-700 group-hover/item:text-blue-600 transition-colors leading-none">{m.full_name}</span>
+                              <span className="text-sm font-black text-slate-700 group-hover/item:text-blue-600 transition-colors leading-none">{m.name}</span>
                               <span className="text-[10px] text-slate-400 font-bold uppercase mt-1">{m.title || "Mentor"}</span>
                             </div>
                           </Link>
@@ -100,7 +101,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               {/* Tên hiển thị rút gọn */}
               <div className="flex flex-col ml-1">
                 <span className="text-[12px] font-black text-slate-900 dark:text-white leading-none">
-                  {mentors[0]?.full_name || "MSC Team"}
+                  {mentors[0]?.name || "MSC Team"}
                 </span>
                 <span className="text-[9px] text-slate-400 uppercase font-black mt-1.5 tracking-tighter">
                   {mentors.length > 1 ? `& ${mentors.length - 1} chuyên gia khác` : "Chuyên gia đào tạo"}
