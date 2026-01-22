@@ -55,18 +55,30 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
 
         // If not found, fallback to local data
         if (!data) {
+          console.log(`Mentor not found in Supabase, checking local data for slug: ${params.slug}`)
           const localMentor = mentorDetails.find(m => m.slug === params.slug)
           if (localMentor) {
+            console.log(`Found mentor in local data: ${localMentor.name}`)
             data = convertToMentor(localMentor)
+          } else {
+            console.log(`Mentor not found in local data either`)
           }
+        } else {
+          console.log(`Found mentor in Supabase: ${data.full_name}`)
         }
 
-        if (data) setMentor(data)
+        if (data) {
+          console.log(`Setting mentor:`, data)
+          setMentor(data)
+        } else {
+          console.log(`No mentor data found, will show not found page`)
+        }
       } catch (error) {
-        console.error("❌ Error:", error)
+        console.error("❌ Error fetching mentor:", error)
         // Try fallback even if there's an error
         const localMentor = mentorDetails.find(m => m.slug === params.slug)
         if (localMentor) {
+          console.log(`Fallback: Found mentor in local data: ${localMentor.name}`)
           setMentor(convertToMentor(localMentor))
         }
       } finally {
