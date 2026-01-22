@@ -72,8 +72,8 @@ const ProjectsSection = () => {
           <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl border-2 border-dashed border-gray-100 dark:border-gray-700">
             <p className="text-gray-500">Chưa có dự án tiêu biểu nào được chọn.</p>
           </div>
-        )}
-
+        )}  
+        
         {/* Nút Xem tất cả */}
         <motion.div
           className="text-center"

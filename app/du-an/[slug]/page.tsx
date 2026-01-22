@@ -161,7 +161,7 @@ export default function ProjectDetailPage({ params }: Props) {
                 {project.project_authors && project.project_authors.length > 0 && (
                   <section className="mb-12 pt-8 border-t border-gray-100 dark:border-gray-700">
                     <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                      <Users className="text-blue-600" /> Đội ngũ chuyên gia phụ trách
+                      <Users className="text-blue-600" /> Mentoring & Coaching
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {project.project_authors.map((author, idx) => (
