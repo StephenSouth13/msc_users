@@ -114,8 +114,8 @@ export default function DirectorsSection() {
 
                     <div className="w-full mt-auto pt-4">
                       <Link href={`/mscer/${director.slug}`} className="block">
-                        <Button className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-2xl h-16 text-base font-bold shadow-lg shadow-blue-500/10 group-hover:shadow-blue-500/30 transition-all duration-300 gap-2 uppercase">
-                          Xem Hồ Sơ <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                        <Button className="w-full btn-primary rounded-lg h-12 text-sm font-semibold gap-2">
+                          Xem Hồ Sơ <ArrowRight size={18} />
                         </Button>
                       </Link>
                     </div>
