@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { api, Project } from "@/lib/api-supabase"
+import PageBanner from "@/components/sections/PageBanner"
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -76,35 +77,18 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Hero Section */}
-      <motion.section 
-        className="py-24 bg-gradient-to-br from-blue-900 via-blue-800 to-teal-900 text-white"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="container px-4 mx-auto">
-          <div className="text-center max-w-4xl mx-auto">
-            <motion.h1 
-              className="text-5xl md:text-7xl font-bold mb-6 font-serif tracking-tight"
-              initial={{ opacity: 0, y: -30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-            >
-              DỰ ÁN ĐÃ TRIỂN KHAI
-            </motion.h1>
-            <motion.p 
-              className="text-xl text-blue-100 mb-8 leading-relaxed opacity-90"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-            >
-              Các dự án Mentoring & Coaching thực tế mà MSC Center đã triển khai.
-            </motion.p>
-          </div>
-        </div>
-      </motion.section>
+    <div className="bg-white dark:bg-gray-900">
+      <PageBanner
+        badge="Những dự án tiêu biểu"
+        title="Dự án đã triển khai"
+        subtitle="Các dự án Mentoring & Coaching thực tế mà MSC Center đã triển khai, đem lại giá trị thực cho các đối tác và học viên."
+        stats={[
+          { value: `${projects.length}+`, label: 'Dự án tiêu biểu' },
+          { value: '50+', label: 'Doanh nghiệp' },
+          { value: '5000+', label: 'Học viên' },
+          { value: '10+', label: 'Lĩnh vực' },
+        ]}
+      />
 
       {/* Stats Section */}
       <section className="py-20 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
