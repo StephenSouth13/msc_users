@@ -27,8 +27,9 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
+  /* Primary Button - Dark Blue Standard */
   .btn-primary {
-    @apply bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg;
+    @apply bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg;
   }
 
   .btn-secondary {
@@ -37,6 +38,19 @@
 
   .card-hover {
     @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-2;
+  }
+
+  /* Typography Helpers - Professional Standardization */
+  .section-title {
+    @apply text-4xl md:text-5xl font-black text-gray-900 dark:text-white uppercase tracking-tight font-sans;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-gray-600 dark:text-gray-300 font-medium leading-relaxed;
+  }
+
+  .section-description {
+    @apply text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-medium;
   }
 
   /* Enhanced responsive utilities */
