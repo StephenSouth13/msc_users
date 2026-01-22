@@ -75,13 +75,19 @@ const ProjectsSection = () => {
         )}
 
         {/* Nút Xem tất cả */}
-        <div className="text-center">
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
           <Link href="/du-an">
-            <Button size="lg" className="bg-blue-800 hover:bg-blue-900 text-white px-10 py-7 rounded-xl font-bold">
+            <Button size="lg" className="btn-primary px-8 py-3 h-auto text-base font-semibold rounded-lg">
               Xem tất cả dự án <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   )
