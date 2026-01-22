@@ -17,10 +17,6 @@ const nextConfig = {
     ]
   },
   images: {
-    domains: [
-      'res.cloudinary.com',
-      'yyqajxbkxiddfqnzkcmr.supabase.co'
-    ],
     unoptimized: false,
     remotePatterns: [
       {
