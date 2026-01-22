@@ -33,7 +33,7 @@ function convertToMentor(detail: any): Mentor {
     tech_business_achievements: detail.achievements || [],
     background: {
       education: Array.isArray(detail.education) 
-        ? detail.education.map(e => typeof e === 'string' ? e : `${e.degree} - ${e.school} (${e.year})`).join("\n")
+        ? detail.education.map((e: any) => typeof e === 'string' ? e : `${e.degree} - ${e.school} (${e.year})`).join("\n")
         : "",
       experience: detail.workHistory?.join("\n") || ""
     },

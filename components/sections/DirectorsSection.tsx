@@ -56,13 +56,12 @@ export default function DirectorsSection() {
           viewport={{ once: true }}
         >
           <div className="flex items-center justify-center gap-3 mb-4">
-            <ShieldCheck className="text-blue-600 w-10 h-10" />
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter italic">
-              BAN CHỦ NHIỆM
+        
+            <h2 className="section-title mb-6">
+              BAN CHỦ NHIỆM 
             </h2>
           </div>
-          <div className="w-20 h-1.5 bg-blue-600 mx-auto rounded-full mb-6"></div>
-          <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
+          <p className="section-description">
             Đội ngũ lãnh đạo nòng cốt định hướng chiến lược tại MSC Center.
           </p>
         </motion.div>

@@ -48,7 +48,7 @@ const ProjectsSection = () => {
           viewport={{ once: true }}
         >
           <h2 className="section-title mb-6">
-            Dự Án Tiêu Biểu
+            DỰ ÁN TIÊU BIỂU
           </h2>
           <p className="section-description">
             Khám phá các dự án đào tạo thực tế tiêu biểu nhất do MSC Center triển khai.
