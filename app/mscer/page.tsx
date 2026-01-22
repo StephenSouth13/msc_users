@@ -121,77 +121,141 @@ export default function MSCerPage() {
       </section>
 
       {/* --- Grid Profiles --- */}
-      <section className="container mx-auto px-6">
+      <section className="container mx-auto px-6 relative z-10">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24">
-            <Loader2 className="animate-spin text-blue-600 mb-4" size={48} />
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400">Đang tải dữ liệu học viên...</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center py-24"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <Loader2 className="text-blue-600 mb-4" size={48} />
+            </motion.div>
+            <p className="text-xs font-black uppercase tracking-widest text-slate-400">Đang tải dữ liệu chuyên gia...</p>
+          </motion.div>
+        ) : filteredMscers.length > 0 ? (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto items-stretch"
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredMscers.map((mscer, index) => (
+                  <motion.div
+                    key={mscer.id}
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                    transition={{ duration: 0.4, delay: index * 0.08 }}
+                    layout
+                    className="flex"
+                  >
+                    <Card className="flex flex-col w-full border-none bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden group relative border border-slate-200/50 dark:border-slate-700/50">
+                      {/* Decorative top accent */}
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                      <CardContent className="p-8 md:p-10 flex flex-col items-center text-center h-full">
+
+                        {/* Enhanced Avatar with ring effect */}
+                        <div className="relative mb-8 shrink-0">
+                          <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            className="relative w-48 h-48 rounded-full p-1 bg-gradient-to-br from-blue-200 to-purple-200 dark:from-blue-900/30 dark:to-purple-900/30 shadow-2xl overflow-hidden border-4 border-white dark:border-slate-800"
+                          >
+                            <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-slate-700">
+                              <Image
+                                src={mscer.avatar_url || '/MSCers/default.webp'}
+                                alt={mscer.full_name}
+                                fill
+                                className="object-cover transition-transform duration-700 group-hover:scale-125"
+                              />
+                            </div>
+                          </motion.div>
+                          {/* Animated Star Badge */}
+                          <motion.div
+                            whileHover={{ scale: 1.2, rotate: 360 }}
+                            className="absolute bottom-0 right-0 bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-full border-4 border-white dark:border-slate-800 shadow-xl text-white"
+                          >
+                            <Star size={20} className="fill-white" />
+                          </motion.div>
+                        </div>
+
+                        {/* Information Container */}
+                        <div className="w-full flex flex-col flex-grow">
+                          {/* Role Badge */}
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.08 + 0.1 }}
+                            className="inline-flex items-center justify-center mb-4 mx-auto"
+                          >
+                            <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 text-blue-700 dark:text-blue-300">
+                              {mscer.position}
+                            </span>
+                          </motion.div>
+
+                          {/* Name */}
+                          <h3 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-4">
+                            {mscer.full_name}
+                          </h3>
+
+                          {/* Testimonial / Achievement */}
+                          <div className="flex-grow flex items-center justify-center mb-8">
+                            <blockquote className="text-slate-600 dark:text-slate-300 text-sm md:text-base leading-relaxed italic font-medium line-clamp-4">
+                              "{mscer.testimonial || mscer.achievement_summary || 'Chuyên gia tài năng trong lĩnh vực của mình'}"
+                            </blockquote>
+                          </div>
+
+                          {/* View Profile Button */}
+                          <div className="w-full mt-auto">
+                            <Link href={`/mscer/${mscer.slug}`} className="block group/btn">
+                              <motion.button
+                                whileHover={{ y: -2 }}
+                                whileTap={{ y: 0 }}
+                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl h-14 text-base font-bold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 flex items-center justify-center gap-2 group"
+                              >
+                                Xem Hồ Sơ
+                                <motion.div
+                                  className="group-hover:translate-x-1 transition-transform"
+                                >
+                                  <ArrowRight size={20} />
+                                </motion.div>
+                              </motion.button>
+                            </Link>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Result count */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-center mt-12"
+            >
+              <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
+                Hiển thị <span className="font-bold text-slate-700 dark:text-slate-300">{filteredMscers.length}</span> chuyên gia
+              </p>
+            </motion.div>
+          </>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto items-stretch">
-            <AnimatePresence>
-              {mscers.map((mscer, index) => (
-                <motion.div
-                  key={mscer.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -12 }}
-                  className="flex"
-                >
-                  <Card className="flex flex-col w-full border-none bg-white dark:bg-slate-900 rounded-[3rem] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_40px_80px_-20px_rgba(37,99,235,0.15)] transition-all duration-500 overflow-hidden group border border-slate-100 dark:border-slate-800">
-                    <CardContent className="p-10 md:p-12 flex flex-col items-center text-center h-full">
-                      
-                      {/* Avatar chuẩn mẫu với Star Badge xanh dương */}
-                      <div className="relative mb-10 shrink-0">
-                        <div className="relative w-44 h-44 rounded-full p-1 bg-white dark:bg-slate-800 shadow-xl overflow-hidden border border-slate-100">
-                          <Image
-                            src={mscer.avatar_url || '/MSCers/default.webp'}
-                            alt={mscer.full_name}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
-                        </div>
-                        {/* Ngôi sao Badge xanh dương chuẩn vị trí ảnh mẫu */}
-                        <div className="absolute bottom-2 right-2 bg-[#3b82f6] p-2.5 rounded-full border-[4px] border-white dark:border-slate-900 shadow-lg text-white">
-                          <Star size={18} className="fill-white" />
-                        </div>
-                      </div>
-
-                      {/* Container thông tin - Dùng flex-grow để căn đều đáy */}
-                      <div className="w-full flex flex-col flex-grow">
-                        {/* Tên MSCer */}
-                        <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-3">
-                          {mscer.full_name}
-                        </h3>
-
-                        {/* Chức danh màu xanh dương */}
-                        <p className="text-[#3b82f6] font-extrabold text-lg uppercase tracking-wider mb-6">
-                          {mscer.position}
-                        </p>
-
-                        {/* Testimonial / Achievement Summary */}
-                        <div className="flex-grow flex items-center justify-center mb-10">
-                          <blockquote className="text-slate-600 dark:text-slate-400 text-base md:text-lg leading-relaxed italic font-medium">
-                            "{mscer.testimonial || mscer.achievement_summary}"
-                          </blockquote>
-                        </div>
-
-                        {/* Nút bấm chuẩn UI Blue Executive - Luôn thẳng hàng nhờ flex-grow */}
-                        <div className="w-full mt-auto">
-                          <Link href={`/mscer/${mscer.slug}`} className="block">
-                            <Button className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-2xl h-16 text-lg font-bold shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all duration-300 gap-2">
-                              Xem Hồ Sơ <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform" />
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16"
+          >
+            <p className="text-slate-500 dark:text-slate-400 text-lg">Không tìm thấy chuyên gia với chức danh này</p>
+          </motion.div>
         )}
       </section>
     </div>
