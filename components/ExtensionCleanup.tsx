@@ -19,6 +19,19 @@ export default function ExtensionCleanup() {
       }
     }
 
+    // Initialize ethereum property safely to prevent extension conflicts
+    if (typeof window !== 'undefined' && !window.hasOwnProperty('ethereum')) {
+      try {
+        Object.defineProperty(window, 'ethereum', {
+          value: undefined,
+          writable: true,
+          configurable: true,
+        })
+      } catch (e) {
+        // ignore if already defined
+      }
+    }
+
     // Strip from documentElement and body immediately
     if (typeof document !== 'undefined') {
       stripAttrs(document.documentElement)
