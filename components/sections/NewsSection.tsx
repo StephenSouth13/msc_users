@@ -97,7 +97,7 @@ const NewsSection = () => {
             </div>
         )}
 
-        {/* Nút Xem tất cả thiết kế lại siêu đẹp */}
+        {/* Nút Xem tất cả */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -106,9 +106,9 @@ const NewsSection = () => {
           className="text-center"
         >
           <Link href="/tin-tuc">
-            <Button size="lg" className="rounded-2xl bg-slate-900 hover:bg-blue-600 text-white font-black px-12 h-16 transition-all duration-300 shadow-2xl shadow-blue-200 dark:shadow-none hover:scale-105 uppercase text-xs tracking-widest">
+            <Button size="lg" className="btn-primary px-8 py-3 h-auto text-base font-semibold rounded-lg">
               Khám phá tất cả tin tức
-              <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </motion.div>
