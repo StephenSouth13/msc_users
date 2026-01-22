@@ -4,14 +4,43 @@ import { useState, useEffect } from 'react'
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { 
-  ArrowLeft, Trophy, TrendingUp, Heart, 
+import {
+  ArrowLeft, Trophy, TrendingUp, Heart,
   GraduationCap, Briefcase, Mail, Phone, Loader2, Wrench, Star, ExternalLink
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { api, Mentor } from "@/lib/api-supabase"
+import { mentorDetails, MentorDetail } from "@/data/mentor-detail"
+
+// Helper to convert MentorDetail to Mentor
+function convertToMentor(detail: MentorDetail): Mentor {
+  return {
+    id: detail.id,
+    full_name: detail.name,
+    slug: detail.slug,
+    title: detail.title,
+    description: detail.role || detail.bio || "",
+    email: detail.personalInfo?.["Email"] || "",
+    phone: detail.personalInfo?.["Điện thoại"] || "",
+    avatar_url: detail.avatar || "/Mentors/default.webp",
+    organizations: detail.organization?.join(", ") || "",
+    company: detail.organization?.[0] || "",
+    specialties: detail.subjects || [],
+    practical_projects: detail.practicalWorks || [],
+    research_projects: detail.researchProjects || [],
+    awards: detail.awards || [],
+    tech_business_achievements: detail.achievements || [],
+    background: {
+      education: Array.isArray(detail.education)
+        ? detail.education.map(e => typeof e === 'string' ? e : `${e.degree} - ${e.school} (${e.year})`).join("\n")
+        : "",
+      experience: detail.workHistory?.join("\n") || ""
+    },
+    is_active: true
+  }
+}
 
 export default function MentorDetailPage({ params }: { params: { slug: string } }) {
   const [mentor, setMentor] = useState<Mentor | null>(null)
@@ -21,10 +50,25 @@ export default function MentorDetailPage({ params }: { params: { slug: string } 
     const fetchDetail = async () => {
       try {
         setLoading(true)
-        const data = await api.getMentorBySlug(params.slug)
+        // First try Supabase
+        let data = await api.getMentorBySlug(params.slug)
+
+        // If not found, fallback to local data
+        if (!data) {
+          const localMentor = mentorDetails.find(m => m.slug === params.slug)
+          if (localMentor) {
+            data = convertToMentor(localMentor)
+          }
+        }
+
         if (data) setMentor(data)
       } catch (error) {
         console.error("❌ Error:", error)
+        // Try fallback even if there's an error
+        const localMentor = mentorDetails.find(m => m.slug === params.slug)
+        if (localMentor) {
+          setMentor(convertToMentor(localMentor))
+        }
       } finally {
         setLoading(false)
       }
