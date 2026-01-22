@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { AnimatePresence, motion } from "framer-motion"
+import PageBanner from "@/components/sections/PageBanner"
 
 // Định nghĩa Interface để fix lỗi TypeScript "Property does not exist"
 interface GalleryImage {
@@ -120,42 +121,18 @@ const AboutPageClient = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Hero Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-400"
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-            style={{
-              backgroundSize: "200% 200%",
-            }}
-          />
-        </div>
-
-        <div className="container relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white font-serif">
-              GIỚI THIỆU
-            </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Trung tâm Mentoring & Coaching đầu tiên tại Việt Nam.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+    <div className="bg-white dark:bg-gray-900">
+      <PageBanner
+        badge="Về chúng tôi"
+        title="Giới thiệu"
+        subtitle="Trung tâm Mentoring & Coaching đầu tiên tại Việt Nam, nơi kết nối tri thức và phát triển tiềm năng con người."
+        stats={[
+          { value: '10+', label: 'Năm kinh nghiệm' },
+          { value: '10000+', label: 'Học viên' },
+          { value: '100+', label: 'Mentor' },
+          { value: '95%', label: 'Thành công' },
+        ]}
+      />
 
       {/* Philosophy Section */}
       <section className="py-20 bg-white dark:bg-gray-800 relative overflow-hidden">
