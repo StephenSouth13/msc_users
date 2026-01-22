@@ -3,19 +3,23 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { Calendar, User, Clock, Eye, BookOpen, TrendingUp, ArrowRight } from "lucide-react"
+import { Calendar, Clock, Eye, BookOpen, TrendingUp, Filter, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { useEffect, useState } from "react"
 import { api, BlogPost } from "@/lib/api-supabase"
 import PageBanner from "@/components/sections/PageBanner"
 
 export default function BlogPage() {
   const [allBlogPosts, setAllBlogPosts] = useState<BlogPost[]>([])
+  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest')
+  const [categories, setCategories] = useState<string[]>([])
 
   useEffect(() => {
     const fetchBlogPosts = async () => {
@@ -23,6 +27,10 @@ export default function BlogPage() {
         setLoading(true)
         const blogPosts = await api.getBlogPosts()
         setAllBlogPosts(blogPosts || [])
+
+        // Extract unique categories
+        const uniqueCategories = Array.from(new Set(blogPosts?.map(p => p.category).filter(Boolean))) as string[]
+        setCategories(uniqueCategories)
       } catch (err) {
         setError('Lỗi tải dữ liệu bài viết')
         console.error('Error:', err)
@@ -30,6 +38,25 @@ export default function BlogPage() {
     }
     fetchBlogPosts()
   }, [])
+
+  // Filter and sort posts
+  useEffect(() => {
+    let filtered = [...allBlogPosts]
+
+    // Filter by category
+    if (selectedCategory) {
+      filtered = filtered.filter(post => post.category === selectedCategory)
+    }
+
+    // Sort by date
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.publish_date || 0).getTime()
+      const dateB = new Date(b.publish_date || 0).getTime()
+      return sortBy === 'newest' ? dateB - dateA : dateA - dateB
+    })
+
+    setFilteredPosts(filtered)
+  }, [allBlogPosts, selectedCategory, sortBy])
 
   const featuredPost = allBlogPosts[0]
   const recentPosts = allBlogPosts.slice(1)
