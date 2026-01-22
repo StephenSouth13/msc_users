@@ -17,12 +17,21 @@ const nextConfig = {
     ]
   },
   images: {
-    // Thêm domain Supabase của bạn vào danh sách bên dưới
     domains: [
-      'res.cloudinary.com', 
-      'yyqajxbkxiddfqnzkcmr.supabase.co' // <-- Domain Supabase lấy từ lỗi log của bạn
+      'res.cloudinary.com',
+      'yyqajxbkxiddfqnzkcmr.supabase.co'
     ],
-    unoptimized: true,
+    unoptimized: false,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'yyqajxbkxiddfqnzkcmr.supabase.co',
+      },
+    ],
   },
 }
 
