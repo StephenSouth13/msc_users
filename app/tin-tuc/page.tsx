@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { useEffect, useState } from "react"
 import { api, BlogPost } from "@/lib/api-supabase"
+import PageBanner from "@/components/sections/PageBanner"
 
 export default function BlogPage() {
   const [allBlogPosts, setAllBlogPosts] = useState<BlogPost[]>([])
@@ -49,29 +50,18 @@ export default function BlogPage() {
   if (error || !featuredPost) return <div className="p-40 text-center font-bold text-slate-300 italic">Hiện tại chưa có bài viết nào được xuất bản.</div>
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      {/* Header */}
-      <section className="py-24 bg-slate-900 text-white relative">
-        <div className="container relative z-10 text-center max-w-4xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-            <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 mb-6 px-4 py-1 uppercase text-[10px] font-black tracking-[0.2em]">Knowledge Hub</Badge>
-            <h1 className="text-5xl md:text-7xl font-black mb-6 font-serif tracking-tight leading-tight">Chia sẻ & Tri thức</h1>
-            <p className="text-xl text-slate-400 font-medium italic">Nơi hội tụ kiến thức thực tiễn từ chuyên gia MSC.</p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="py-12 bg-white border-y border-slate-100 shadow-sm relative z-20 -mt-10 mx-auto container rounded-[2.5rem] px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="text-3xl font-black text-slate-900 mb-1">{stat.value}</div>
-              <p className="text-[10px] uppercase font-black tracking-widest text-slate-400">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+    <div className="bg-white dark:bg-gray-900">
+      <PageBanner
+        badge="Knowledge Hub"
+        title="Chia sẻ & Tri thức"
+        subtitle="Nơi hội tụ kiến thức thực tiễn từ chuyên gia MSC Center, chia sẻ kinh nghiệm và phát triển chuyên môn."
+        stats={[
+          { value: '50+', label: 'Bài viết chuyên môn' },
+          { value: '10K+', label: 'Lượt đọc/tháng' },
+          { value: '10+', label: 'Chuyên gia' },
+          { value: '8+', label: 'Lĩnh vực' },
+        ]}
+      />
 
       {/* FEATURED - Cinematic Article */}
       <section className="py-20 container px-4">

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import PageBanner from "@/components/sections/PageBanner"
 
 interface FormData {
   name: string
@@ -63,26 +64,18 @@ export default function ContactPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="py-24 bg-gradient-to-br from-blue-900 via-blue-800 to-teal-900 text-white">
-        <div className="container">
-          <motion.div 
-            className="text-center max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-block bg-white/10 p-4 rounded-full mb-6">
-              <Send className="h-12 w-12 text-white" />
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">Kết nối với MSC</h1>
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-              Chúng tôi luôn sẵn sàng lắng nghe và tư vấn. Hãy để lại lời nhắn hoặc liên hệ trực tiếp để bắt đầu hành trình phát triển của bạn.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+    <div className="bg-white dark:bg-gray-900">
+      <PageBanner
+        badge="Liên hệ ngay"
+        title="Kết nối với MSC"
+        subtitle="Chúng tôi luôn sẵn sàng lắng nghe và tư vấn. Hãy để lại lời nhắn hoặc liên hệ trực tiếp để bắt đầu hành trình phát triển của bạn."
+        stats={[
+          { value: '+84', label: 'Điện thoại' },
+          { value: '24/7', label: 'Hỗ trợ' },
+          { value: '100%', label: 'Tin cậy' },
+          { value: 'Online', label: 'Sẵn sàng' },
+        ]}
+      />
 
       {/* Main Content Section */}
       <section className="py-24 bg-white">
