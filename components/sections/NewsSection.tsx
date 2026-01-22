@@ -46,10 +46,10 @@ const NewsSection = () => {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-sm border border-blue-100 dark:border-blue-800">
             <Sparkles size={12} className="animate-pulse" /> Tri thức & Chia sẻ
           </div>
-          <h2 className="text-4xl md:text-6xl font-black mb-6 text-slate-900 dark:text-white font-serif tracking-tight">
-            Tin tức mới nhất
+          <h2 className="section-title mb-6 text-5xl md:text-6xl">
+            Tin Tức Mới Nhất
           </h2>
-          <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
+          <p className="section-description text-slate-500 dark:text-slate-400">
             Cập nhật những góc nhìn chuyên sâu và giải pháp đào tạo đột phá từ đội ngũ chuyên gia MSC.
           </p>
         </motion.div>
@@ -97,7 +97,7 @@ const NewsSection = () => {
             </div>
         )}
 
-        {/* Nút Xem tất cả thiết kế lại siêu đẹp */}
+        {/* Nút Xem tất cả */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -106,9 +106,9 @@ const NewsSection = () => {
           className="text-center"
         >
           <Link href="/tin-tuc">
-            <Button size="lg" className="rounded-2xl bg-slate-900 hover:bg-blue-600 text-white font-black px-12 h-16 transition-all duration-300 shadow-2xl shadow-blue-200 dark:shadow-none hover:scale-105 uppercase text-xs tracking-widest">
+            <Button size="lg" className="btn-primary px-8 py-3 h-auto text-base font-semibold rounded-lg">
               Khám phá tất cả tin tức
-              <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </motion.div>

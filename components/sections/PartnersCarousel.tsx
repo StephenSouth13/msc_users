@@ -54,8 +54,10 @@ const PartnersCarousel = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white font-serif">Đơn vị đồng hành</h2>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight font-sans mb-6">
+            Đơn Vị Đồng Hành
+          </h2>
+          <p className="text-lg text-blue-100 max-w-3xl mx-auto font-medium">
             Những đối tác tin cậy đồng hành cùng MSC Center trong hành trình phát triển giáo dục
           </p>
         </motion.div>

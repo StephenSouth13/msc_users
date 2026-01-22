@@ -113,9 +113,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         
         {/* NÚT XEM CHI TIẾT */}
         <Link href={`/du-an/${project.slug || project.id}`} className="mt-8">
-          <Button className="w-full bg-blue-800 hover:bg-slate-900 dark:bg-blue-700 text-white font-black rounded-2xl h-14 group/btn shadow-xl shadow-blue-100 dark:shadow-none transition-all duration-300 uppercase text-xs tracking-widest">
+          <Button className="w-full btn-primary rounded-lg h-11 text-sm font-semibold">
             Xem chi tiết dự án
-            <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-2 transition-transform" />
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
       </CardContent>

@@ -42,28 +42,27 @@ const HeroVideo = () => {
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Video Background */}
-      <div className="absolute inset-0 z-0">
+            <div
+        className="absolute inset-0 z-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%)
+          `,
+        }}
+      >
         <video
           ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
+          preload="none"
           className="w-full h-full object-cover"
-          poster="/placeholder.svg?height=1080&width=1920&text=MSC+Center+Video+Poster"
+          poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23003d6b' width='1920' height='1080'/%3E%3C/svg%3E"
         >
           <source src="/Intro.mp4" type="video/mp4" />
-          {/* Fallback gradient background */}
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900"
-            style={{
-              backgroundImage: `
-                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%)
-              `,
-            }}
-          />
         </video>
 
         {/* Video Overlay */}
