@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Users, Award, Handshake, Building2, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import PageBanner from "@/components/sections/PageBanner"
 
 export default function PartnersPage() {
   // Dữ liệu đối tác thực tế
@@ -66,26 +67,18 @@ export default function PartnersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="py-24 bg-gradient-to-br from-blue-900 via-blue-800 to-teal-900 text-white">
-        <div className="container">
-          <motion.div 
-            className="text-center max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-block bg-white/10 p-4 rounded-full mb-6">
-              <Handshake className="h-12 w-12 text-white" />
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">ĐỐI TÁC & ĐỒNG HÀNH</h1>
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-              MSC Center có mạng lưới đối tác từ các doanh nghiệp và các trường Đại học và Cao đẳng có cùng chung một tầm nhìn về phát triển giáo dục và nguồn nhân lực chất lượng cao.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+    <div className="bg-white dark:bg-gray-900">
+      <PageBanner
+        badge="Mạng lưới toàn cầu"
+        title="Đối tác & Đồng hành"
+        subtitle="MSC Center có mạng lưới đối tác từ các doanh nghiệp và các trường Đại học có cùng chung tầm nhìn về phát triển giáo dục và nguồn nhân lực chất lượng cao."
+        stats={[
+          { value: '100+', label: 'Đối tác doanh nghiệp' },
+          { value: '100+', label: 'Dự án hợp tác' },
+          { value: '5000+', label: 'Học viên' },
+          { value: '50+', label: 'Tỉnh thành' },
+        ]}
+      />
 
       {/* Stats Section */}
       <section className="py-20 bg-white">
