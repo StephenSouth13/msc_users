@@ -40,11 +40,17 @@ const ProjectsSection = () => {
     <section className="py-20 bg-gray-50 dark:bg-neutral-900">
       <div className="container mx-auto px-4">
         {/* Tiêu đề Section */}
-        <motion.div className="text-center mb-16" /* ... animation variants ... */>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">
-            Dự án tiêu biểu
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="section-title mb-6">
+            Dự Án Tiêu Biểu
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="section-description">
             Khám phá các dự án đào tạo thực tế tiêu biểu nhất do MSC Center triển khai.
           </p>
         </motion.div>
@@ -69,13 +75,19 @@ const ProjectsSection = () => {
         )}
 
         {/* Nút Xem tất cả */}
-        <div className="text-center">
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
           <Link href="/du-an">
-            <Button size="lg" className="bg-blue-800 hover:bg-blue-900 text-white px-10 py-7 rounded-xl font-bold">
+            <Button size="lg" className="btn-primary px-8 py-3 h-auto text-base font-semibold rounded-lg">
               Xem tất cả dự án <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

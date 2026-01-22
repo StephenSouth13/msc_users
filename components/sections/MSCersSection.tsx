@@ -58,10 +58,20 @@ const MSCersSection = () => {
   return (
     <section className="py-20 bg-gradient-to-br from-teal-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <div className="container px-4">
-        <div className="text-center mb-16">
-           <h2 className="text-4xl font-bold text-gray-900 dark:text-white uppercase font-serif">ĐỘI NGŨ MSCERS</h2>
-           <p className="text-gray-500 mt-4 italic">Hành trình trưởng thành từ MSC Center</p>
-        </div>
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+           <h2 className="section-title mb-6">
+            Đội Ngũ MSCers
+           </h2>
+           <p className="section-subtitle text-gray-500 dark:text-gray-400 italic">
+            Hành trình trưởng thành từ MSC Center
+           </p>
+        </motion.div>
 
         <div className="relative flex items-center justify-center gap-6">
           <Button onClick={prevSlide} variant="outline" size="icon" className="rounded-full shrink-0 border-teal-200">

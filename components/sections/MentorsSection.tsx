@@ -76,10 +76,10 @@ const MentorsSection = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white font-serif">
-            BAN GIẢNG HUẤN
+          <h2 className="section-title mb-6">
+            Ban Giảng Huấn
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="section-description">
             Đội ngũ Ban giảng huấn Mentoring & Coaching của MSC Center
           </p>
         </motion.div>
