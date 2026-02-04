@@ -92,7 +92,7 @@ export default function ProjectsPage() {
                             fill
                             className="object-cover group-hover:scale-110 transition-transform duration-500"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                          <div className="absolute inset-0 bg-gradient-to-t to-transparent"></div>
                           <Badge className="absolute top-4 left-4 bg-white/95 text-black font-bold border-none">
                             {project.category}
                           </Badge>

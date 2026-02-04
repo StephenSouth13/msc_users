@@ -32,7 +32,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+          <div className="absolute inset-0 bg-gradient-to-t via-transparent to-transparent opacity-60"></div>
           <Badge className="absolute top-6 left-6 bg-white/95 dark:bg-neutral-900/90 text-slate-900 font-black shadow-xl border-none px-4 py-1.5 rounded-full text-[10px] uppercase tracking-[0.2em]">
             {project.category}
           </Badge>

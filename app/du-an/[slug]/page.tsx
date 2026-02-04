@@ -111,7 +111,7 @@ export default function ProjectDetailPage({ params }: Props) {
                   className="object-cover" 
                   unoptimized={true}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t to-transparent" />
                 <div className="absolute bottom-6 left-6">
                   <div className="flex gap-2 mb-4">
                     {project.category && <Badge className="bg-blue-600">{project.category}</Badge>}
