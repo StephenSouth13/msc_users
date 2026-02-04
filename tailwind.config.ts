@@ -54,11 +54,11 @@ const config: Config = {
       // --- CẬP NHẬT PHÔNG CHỮ MONTSERRAT TẠI ĐÂY ---
       fontFamily: {
         // 'sans' là phông mặc định của Tailwind, đặt Montserrat lên đầu
-        sans: ["Montserrat", "var(--font-montserrat)", "sans-serif"],
+        sans: ["Montserrat", "var(--font-roboto)", "sans-serif"],
         // 'serif' nếu bạn muốn dùng cho các tiêu đề nghệ thuật
-        serif: ["Montserrat", "var(--font-montserrat)", "serif"],
+        serif: ["Montserrat", "var(--font-merriweather)", "serif"],
         // Tạo thêm class riêng 'font-montserrat' để dùng khi cần thiết
-        montserrat: ["Montserrat", "var(--font-montserrat)", "sans-serif"],
+        montserrat: ["Montserrat", "sans-serif"],
       },
       animation: {
         "fade-in": "fadeIn 0.6s ease-in-out",
