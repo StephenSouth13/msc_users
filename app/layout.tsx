@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Montserrat } from "next/font/google"; // 1. Import Montserrat
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/language-provider";
@@ -7,7 +8,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
 import ExtensionCleanup from "@/components/ExtensionCleanup";
-
+// 2. Khởi tạo font Montserrat
+const montserrat = Montserrat({
+  subsets: ["vietnamese"], // Hỗ trợ tiếng Việt
+  weight: ["300", "400", "500", "600", "700", "800", "900"], // Đủ các độ đậm nhạt
+  display: "swap",
+});
 // Metadata này sẽ được tự động đưa vào thẻ <head>
 // Nó cũng sẽ được sử dụng để tạo các thẻ OpenGraph và Twitter Card
 export const metadata: Metadata = {
@@ -95,7 +101,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" suppressHydrationWarning>
-      <body suppressHydrationWarning className={"font-sans antialiased"}>
+     <body suppressHydrationWarning className={`${montserrat.className} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <LanguageProvider>
             <AuthProvider>
