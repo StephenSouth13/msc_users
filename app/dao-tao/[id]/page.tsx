@@ -1,3 +1,4 @@
+//D:\MSC\msc_users\app\dao-tao\[id]\page.tsx
 'use client'
 
 import { useParams } from 'next/navigation'

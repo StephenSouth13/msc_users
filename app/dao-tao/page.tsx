@@ -1,3 +1,4 @@
+//D:\MSC\msc_users\app\dao-tao\page.tsx
 'use client';
 
 import { useState, useRef, useEffect } from "react";
